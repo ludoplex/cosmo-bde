@@ -11,7 +11,7 @@ This document describes the critical integration between e9studio, Cosmopolitan 
 | e9studio | `upstream/e9studio` | Binary analysis, CFG, decompilation, patching |
 | cosmo-binaryen | `upstream/ludoplex-binaryen` | WASM optimizer (wasm-opt.com + binaryen.wasm) |
 | cosmo-sokol | `upstream/cosmo-sokol` | GUI framework (Dear ImGui + sokol) |
-| tedit-cosmo | `upstream/tedit-cosmo` | Editor framework with INI extensibility |
+| cosmo-teditor | `upstream/cosmo-teditor` | Editor framework with INI extensibility |
 | cosmo-bsd | `upstream/ludoplex-cosmo-bsd` | APE userland, ZipOS utilities |
 
 ## APE Binary Format Support
@@ -74,7 +74,7 @@ int e9_ape_patch_sync(E9Binary *bin, uint64_t vaddr,
 │                     E9Studio Hot-Reload Pipeline                     │
 ├─────────────────────────────────────────────────────────────────────┤
 │                                                                      │
-│  1. SOURCE EDITING (tedit-cosmo)                                     │
+│  1. SOURCE EDITING (cosmo-teditor)                                   │
 │     ┌─────────────┐     ┌─────────────┐                             │
 │     │  main.c     │────▶│ File Watch  │                             │
 │     │  (editing)  │     │   Event     │                             │

@@ -114,10 +114,10 @@
 
 ---
 
-### tedit-cosmo
+### cosmo-teditor
 **Text editor for Cosmopolitan (reference implementation).**
 
-**Local path:** `vendors/submodules/tedit-cosmo/`
+**Local path:** `vendors/submodules/cosmo-teditor/`
 
 ---
 

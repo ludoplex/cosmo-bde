@@ -34,9 +34,9 @@
 [submodule "vendors/submodules/ludoplex-cosmo-bsd"]
 	path = vendors/submodules/ludoplex-cosmo-bsd
 	url = https://github.com/ludoplex/cosmo-bsd.git
-[submodule "vendors/submodules/tedit-cosmo"]
-	path = vendors/submodules/tedit-cosmo
-	url = https://github.com/ludoplex/tedit-cosmo.git
+[submodule "vendors/submodules/cosmo-teditor"]
+	path = vendors/submodules/cosmo-teditor
+	url = https://github.com/ludoplex/cosmo-teditor.git
 [submodule "vendors/submodules/StateSmith"]
 	path = vendors/submodules/StateSmith
 	url = https://github.com/StateSmith/StateSmith

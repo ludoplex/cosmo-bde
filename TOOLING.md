@@ -58,7 +58,7 @@ This document ensures the repository can be deployed as a **GitHub template** wi
 | **cosmo-sokol** | Graphics | `vendors/cosmo-sokol/` | Cross-platform graphics | Linked |
 | **cosmo-bsd** | BSD libs | `vendors/cosmo-bsd/` | BSD utilities | Linked |
 | **cosmogfx** | Graphics | `vendors/cosmogfx/` | GPU abstraction | Linked |
-| **tedit-cosmo** | Editor | `vendors/tedit-cosmo/` | Text editor | Standalone |
+| **cosmo-teditor** | Editor | `vendors/cosmo-teditor/` | Text editor | Standalone |
 | **cosmo-include** | Headers | `vendors/cosmo-include/` | Cosmo headers | Include path |
 | **cosmo-cross-sdk** | SDK | `vendors/cosmo-cross-sdk/` | Cross-compile | `make cross` |
 | **awesome-cosmo** | Reference | `vendors/awesome-cosmo/` | Curated list | Documentation |
