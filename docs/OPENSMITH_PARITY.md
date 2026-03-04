@@ -1,4 +1,4 @@
-# CodeSmith Parity Harness (PR1)
+# OpenSmith Parity Harness (PR1)
 
 This document defines the PR1 foundation for reverse-engineering and parity
 tracking against `Generator-85.zip`.
@@ -14,29 +14,29 @@ PR1 intentionally does not implement template execution. It delivers:
 ## Commands
 
 ```bash
-make codesmith-corpus-lock CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
-make codesmith-corpus CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
-make codesmith-parity CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
 On Windows, prefer:
 
 ```bash
-make codesmith-corpus CODESMITH_ZIP="C:/Users/<you>/Downloads/Generator-85.zip"
+make opensmith-corpus OPENSMITH_ZIP="C:/Users/<you>/Downloads/Generator-85.zip"
 ```
 
-`codesmith-parity` defaults to dry-run (fixture discovery and corpus integrity).
+`opensmith-parity` defaults to dry-run (fixture discovery and corpus integrity).
 
 To execute an engine command per fixture:
 
 ```bash
-make codesmith-parity CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip" \
+make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip" \
   ENGINE="cat {input}"
 ```
 
 ## Lock File
 
-`specs/testing/codesmith/corpus.lock.json` captures:
+`specs/testing/opensmith/corpus.lock.json` captures:
 
 - source archive hash
 - nested sample archive scope
@@ -50,8 +50,8 @@ and future parity PRs.
 
 When engine mode is used, artifacts are written under:
 
-- `build/codesmith/parity/**/*.stdout`
-- `build/codesmith/parity/**/*.stderr`
-- `build/codesmith/parity/**/*.exitcode`
+- `build/opensmith/parity/**/*.stdout`
+- `build/opensmith/parity/**/*.stderr`
+- `build/opensmith/parity/**/*.exitcode`
 
 These are intentionally outside version control.

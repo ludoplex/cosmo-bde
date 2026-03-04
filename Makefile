@@ -34,15 +34,15 @@ SRC_DIR := src
 VENDOR_DIR := vendor
 MODEL_DIR := model
 
-# CodeSmith RE corpus / parity scaffold (PR1)
+# OpenSmith RE corpus / parity scaffold (PR1)
 ifeq ($(OS),Windows_NT)
-CODESMITH_ZIP ?= C:/Users/$(USERNAME)/Downloads/Generator-85.zip
+OPENSMITH_ZIP ?= C:/Users/$(USERNAME)/Downloads/Generator-85.zip
 else
-CODESMITH_ZIP ?= $(HOME)/Downloads/Generator-85.zip
+OPENSMITH_ZIP ?= $(HOME)/Downloads/Generator-85.zip
 endif
-CODESMITH_LOCK := specs/testing/codesmith/corpus.lock.json
-CODESMITH_CORPUS_DIR := $(BUILD_DIR)/codesmith/corpus
-CODESMITH_PARITY_DIR := $(BUILD_DIR)/codesmith/parity
+OPENSMITH_LOCK := specs/testing/opensmith/corpus.lock.json
+OPENSMITH_CORPUS_DIR := $(BUILD_DIR)/opensmith/corpus
+OPENSMITH_PARITY_DIR := $(BUILD_DIR)/opensmith/parity
 
 # ══════════════════════════════════════════════════════════════════════════════
 # FORMAT DISCOVERY (the makefile discovers what to build)
@@ -84,7 +84,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev codesmith-corpus-lock codesmith-corpus codesmith-parity
+.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -103,9 +103,9 @@ help:
 	@echo "│  make              Build Ring 0 tools + application                 │"
 	@echo "│  make regen        Regenerate all (auto-detect tools)               │"
 	@echo "│  make verify       Regen + drift check                              │"
-	@echo "│  make codesmith-corpus-lock Build deterministic CodeSmith lock      │"
-	@echo "│  make codesmith-corpus      Extract RE fixture corpus               │"
-	@echo "│  make codesmith-parity      Run parity harness scaffold             │"
+	@echo "│  make opensmith-corpus-lock Build deterministic OpenSmith lock      │"
+	@echo "│  make opensmith-corpus      Extract RE fixture corpus               │"
+	@echo "│  make opensmith-parity      Run parity harness scaffold             │"
 	@echo "│  make e9studio     Build live reload tool                           │"
 	@echo "│  make feedback     Ring 0→1→2 feedback loop                         │"
 	@echo "│  make dev          Watch specs, auto-regen on change                │"
@@ -343,29 +343,29 @@ regen: tools
 verify: tools
 	@./scripts/regen-all.sh --verify
 
-codesmith-corpus-lock:
-	@$(PYTHON) ./scripts/codesmith_corpus.py inventory \
-		--zip "$(CODESMITH_ZIP)" \
-		--lock "$(CODESMITH_LOCK)"
+opensmith-corpus-lock:
+	@$(PYTHON) ./scripts/opensmith_corpus.py inventory \
+		--zip "$(OPENSMITH_ZIP)" \
+		--lock "$(OPENSMITH_LOCK)"
 
-codesmith-corpus: codesmith-corpus-lock
-	@$(PYTHON) ./scripts/codesmith_corpus.py extract \
-		--zip "$(CODESMITH_ZIP)" \
-		--lock "$(CODESMITH_LOCK)" \
-		--out-dir "$(CODESMITH_CORPUS_DIR)"
+opensmith-corpus: opensmith-corpus-lock
+	@$(PYTHON) ./scripts/opensmith_corpus.py extract \
+		--zip "$(OPENSMITH_ZIP)" \
+		--lock "$(OPENSMITH_LOCK)" \
+		--out-dir "$(OPENSMITH_CORPUS_DIR)"
 
-codesmith-parity: codesmith-corpus
+opensmith-parity: opensmith-corpus
 	@if [ -n "$(ENGINE)" ]; then \
-		$(PYTHON) ./scripts/codesmith_parity.py \
-			--inventory "$(CODESMITH_LOCK)" \
-			--corpus-dir "$(CODESMITH_CORPUS_DIR)" \
-			--artifacts-dir "$(CODESMITH_PARITY_DIR)" \
+		$(PYTHON) ./scripts/opensmith_parity.py \
+			--inventory "$(OPENSMITH_LOCK)" \
+			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
+			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--engine "$(ENGINE)"; \
 	else \
-		$(PYTHON) ./scripts/codesmith_parity.py \
-			--inventory "$(CODESMITH_LOCK)" \
-			--corpus-dir "$(CODESMITH_CORPUS_DIR)" \
-			--artifacts-dir "$(CODESMITH_PARITY_DIR)" \
+		$(PYTHON) ./scripts/opensmith_parity.py \
+			--inventory "$(OPENSMITH_LOCK)" \
+			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
+			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--dry-run; \
 	fi
 

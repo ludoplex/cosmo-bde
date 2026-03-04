@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
-"""Build and validate a deterministic CodeSmith fixture corpus.
+"""Build and validate a deterministic OpenSmith fixture corpus.
 
-This script inventories and extracts text fixtures from a CodeSmith-style
+This script inventories and extracts text fixtures from an OpenSmith-style
 distribution zip. It supports nested sample archives, e.g.:
 
   Generator-85.zip
@@ -257,7 +257,7 @@ def cmd_extract(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="CodeSmith corpus inventory/extract tool")
+    parser = argparse.ArgumentParser(description="OpenSmith corpus inventory/extract tool")
     sub = parser.add_subparsers(dest="cmd", required=True)
 
     inv = sub.add_parser("inventory", help="build lock file from zip")

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Run a deterministic parity harness over CodeSmith corpus fixtures.
+"""Run a deterministic parity harness over OpenSmith corpus fixtures.
 
 This is an execution scaffold for staged parity work:
   - dry-run mode validates fixture discovery and corpus integrity
@@ -93,7 +93,7 @@ def write_text(path: Path, text: str) -> None:
 
 
 def main() -> int:
-    parser = argparse.ArgumentParser(description="Run CodeSmith parity harness")
+    parser = argparse.ArgumentParser(description="Run OpenSmith parity harness")
     parser.add_argument("--inventory", required=True, help="path to corpus lock json")
     parser.add_argument("--corpus-dir", required=True, help="path to extracted corpus")
     parser.add_argument("--artifacts-dir", required=True, help="path for run outputs")

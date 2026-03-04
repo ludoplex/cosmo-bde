@@ -1,4 +1,4 @@
-# CodeSmith Parity Corpus (PR1)
+# OpenSmith Parity Corpus (PR1)
 
 This directory stores the deterministic corpus lock for reverse-engineering
 the `Generator-85.zip` template ecosystem.
@@ -26,30 +26,30 @@ the `Generator-85.zip` template ecosystem.
 1. Generate/update lock file:
 
 ```bash
-make codesmith-corpus-lock CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
 2. Extract corpus for local harness runs:
 
 ```bash
-make codesmith-corpus CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
 3. Run dry-run parity harness (fixture discovery check):
 
 ```bash
-make codesmith-parity CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
 4. Run with an engine command (command receives each fixture path):
 
 ```bash
-make codesmith-parity CODESMITH_ZIP="$HOME/Downloads/Generator-85.zip" \
+make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip" \
   ENGINE="cat {input}"
 ```
 
 Windows path example:
 
 ```bash
-make codesmith-corpus CODESMITH_ZIP="C:/Users/<you>/Downloads/Generator-85.zip"
+make opensmith-corpus OPENSMITH_ZIP="C:/Users/<you>/Downloads/Generator-85.zip"
 ```
