@@ -23,6 +23,9 @@
 | `.feature` | bddgen | BDD test scenarios (Gherkin) | 0 | ✓ Working |
 | `.sql` | sqlgen | Database schema, queries | 0 | ✓ Working |
 | `.sig` | siggen | Function signatures, FFI bindings | 0 | ✓ Working |
+| `.cst` | cstgen (planned) | CodeSmith template source | 0/2 | ◐ Corpus + parity harness |
+| `.csp` | cspgen (planned) | CodeSmith template project orchestration | 0/2 | ◐ Corpus + parity harness |
+| `.csmap` | csmapgen (planned) | CodeSmith mapping rules | 0/2 | ◐ Corpus + parity harness |
 
 **Legend:** ✓ Working | ◐ Spec Ready (needs generator) | ○ Stub | ✗ Missing
 

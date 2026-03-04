@@ -1,0 +1,1369 @@
+{
+  "counts_by_ext": {
+    ".csmap": 26,
+    ".csp": 12,
+    ".cst": 131,
+    ".json": 2,
+    ".xml": 15,
+    ".xsd": 6
+  },
+  "entries": [
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "CSharpKeywordEscape.csmap",
+      "ext": ".csmap",
+      "sha256": "9bf62cc2a5a18da1c25ecdd01134a94acd5fc25935fbeb6be8e07d21d53f99e3",
+      "size": 6311
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DB2-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "9fb994a5fc385baa7773c5b5359cafe391a073b4cd7b99422d64a5b214c0b6be",
+      "size": 1782
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DB2-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "ec44bfe96ae17c9cdc2b343f355223278cdc2f3a3a2d8fa2427face00443cbd3",
+      "size": 1787
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DbType-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "8007b3b8596f515332ed3a19231e5381862447b1d803b2f6bf974378e9e21a98",
+      "size": 2319
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DbType-DataReaderMethod.csmap",
+      "ext": ".csmap",
+      "sha256": "6f4a9521332ac5ca198632894ee6e519e42e19efdb09e4fd8dad6803cd60fc72",
+      "size": 2174
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DbType-JavaScript.csmap",
+      "ext": ".csmap",
+      "sha256": "9e690416cd4e5314320003a567a7215479446fe13213eb556c6f065fe2f8785f",
+      "size": 2314
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DbType-TypeScript.csmap",
+      "ext": ".csmap",
+      "sha256": "6ca53986a3cc01c81a2d8b30d65104213b74eccaa08c521fc9be10bebc0c873a",
+      "size": 2305
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "DbType-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "8353e0dc1b355e8fd6ad2745595c36611b14bade071a72c4688f4d9a280dceba",
+      "size": 2331
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Firebird-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "04554ddd21bea575a612ce4d2500fecdbddff07158216b9203dd599894d56f6a",
+      "size": 1862
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Firebird-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "dadb91d6dffa6e6fabf7a168cd30be07e2478c0ab8c549b84183e35e6d451546",
+      "size": 1872
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Oracle-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "54e104fd762165afd397ed5d17c322f41f99401b01f7b84a99b7159b1453b3ef",
+      "size": 2125
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Oracle-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "f57be16e5d8d0c4f79a87c78337d5e5ca28c01c8f5a1e0c8b0e3896cd2573a77",
+      "size": 2129
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Plural-Overrides.csmap",
+      "ext": ".csmap",
+      "sha256": "276ca8146b5ab5c923bcaf5586d86a1ef85fa4cdda28bba93922cbd3575949b1",
+      "size": 1008
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Sql-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "dcb8f915386ade3dd1cd0ca453718be519b31c9bde62581c64a429df354d9e49",
+      "size": 2739
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Sql-System.csmap",
+      "ext": ".csmap",
+      "sha256": "1a4b0fb0cb04c726f0df702080cf321ccb2c0a2dba3407522b1e93aef92a814f",
+      "size": 2962
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "SqlNativeType-DbType.csmap",
+      "ext": ".csmap",
+      "sha256": "6bfa167b54689dfbcdd6bdd00d847a986f45df966c17edb705d2d3596fdcad5d",
+      "size": 2826
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "SqlNativeType-SqlDbType.csmap",
+      "ext": ".csmap",
+      "sha256": "7b469d0c8fbf9d9393cbeed836056372dc8234a7dd2ce461459227a9296c7056",
+      "size": 2828
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Sqlite-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "8dbb998349df524a658084d430a2f59a664288f0da7a96db8ef0619bae6a77aa",
+      "size": 1591
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "Sqlite-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "03c93d13ef10e9ac474066c25fae032d40c91ff36c211e93cc0dd0871b0bf27f",
+      "size": 1595
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "System-CSharpAlias.csmap",
+      "ext": ".csmap",
+      "sha256": "1565800fa7b4ae3da5d96df3ea768934e46a1fbc54870f1f0c25e163b182f184",
+      "size": 1593
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "System-VBAlias.csmap",
+      "ext": ".csmap",
+      "sha256": "72fd0b6235d12cde2a78f549dccb98a7596481c01746c96081f9641ad9dc84c5",
+      "size": 1691
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "VB6KeywordEscape.csmap",
+      "ext": ".csmap",
+      "sha256": "522a0976f7eaa302929b7e3cc7cd085359a39e1b3386021b78557734e1cc9b5a",
+      "size": 10862
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "VBKeywordEscape.csmap",
+      "ext": ".csmap",
+      "sha256": "7bfa88af4eb526e14ba52a203ad664c968428d22f4a5ef83f455171a9315e8e9",
+      "size": 12974
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "VistaDB-CSharp.csmap",
+      "ext": ".csmap",
+      "sha256": "1b5696c5a81d917a5224e08b85621f31950d171d98c6e9ca6a9e17fccfda9245",
+      "size": 1165
+    },
+    {
+      "container": "Samples/Maps.zip",
+      "entry": "VistaDB-VB.csmap",
+      "ext": ".csmap",
+      "sha256": "2f4eebd113e949d72d2d763f3c5c797d2702392646ba7b47ef46349dd9e2bb33",
+      "size": 1172
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/APISample/StoredProcedures.cst",
+      "ext": ".cst",
+      "sha256": "46e20da399c923a463d20f8ccfdcc84de0c65df9533f15d1b4d48ea0f2fd1cea",
+      "size": 12143
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/CustomPropertiesSample.csp",
+      "ext": ".csp",
+      "sha256": "03894d7c92cc9cca0c944e6020c96acfa40d42c2bcb74dbb944dbd163059e58a",
+      "size": 607
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/CustomPropertiesSample.cst",
+      "ext": ".cst",
+      "sha256": "0abf85aeeaf889883f6aa7c8cb0003ccfafec77420a8ce0fa6fa1ee6e87182c1",
+      "size": 914
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/DropDownListSample.cst",
+      "ext": ".cst",
+      "sha256": "8b4a8dc28a7c111975a157b414f7a16ed3129f344009f374baac24a3dc6915d3",
+      "size": 1322
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/PurchaseOrderXml.csp",
+      "ext": ".csp",
+      "sha256": "0ebe1bf728a5297670bd0a8abf3e35c093c59ba740655cea5b404c0af1ab96b1",
+      "size": 1482
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/PurchaseOrderXml.cst",
+      "ext": ".cst",
+      "sha256": "4c156524b473ea78eb915e90c53a0e2a95cb778754c23377b8b0d17996de3a2b",
+      "size": 1246
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/SchemaCollections.cst",
+      "ext": ".cst",
+      "sha256": "6a25bf776af18618ee94aecfc868efe8f9273e98af5349ff7d48d811e84e830e",
+      "size": 991
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/CSharp/CustomPropertiesSample/testpo.xml",
+      "ext": ".xml",
+      "sha256": "8a480866aa8c2e116c0ee1fa97b8262500878a8598501ed8babfce4dc5b7c010",
+      "size": 861
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/APISample/StoredProcedures.cst",
+      "ext": ".cst",
+      "sha256": "2b58bb326e3133cf502c35945c13a27f829216c30435317d567e59368d68ea45",
+      "size": 12423
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/CustomPropertiesSample.csp",
+      "ext": ".csp",
+      "sha256": "4d59b093ed8ada25b04ea659e1b8ece701f229554e810b40fefeac1f7c0794c4",
+      "size": 607
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/CustomPropertiesSample.cst",
+      "ext": ".cst",
+      "sha256": "6a3e07a937a5f3e81812bbdd1d74cb8195594d780cab2696302b4a23774b84e9",
+      "size": 905
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/DropDownListSample.cst",
+      "ext": ".cst",
+      "sha256": "c6ddc333febc38d628d9e95133c331830b0ac409bf9d33e3348ed87121c22041",
+      "size": 1259
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/PurchaseOrderXml.csp",
+      "ext": ".csp",
+      "sha256": "0ebe1bf728a5297670bd0a8abf3e35c093c59ba740655cea5b404c0af1ab96b1",
+      "size": 1482
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/PurchaseOrderXml.cst",
+      "ext": ".cst",
+      "sha256": "adc750055823a7abb53e8399b1001a16e6b5901a017b2c0f117e8721fb3e558b",
+      "size": 1245
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/SchemaCollections.cst",
+      "ext": ".cst",
+      "sha256": "34a97c892637c1a5a037321d9640e336342957b73e35623fd6fad4e9f3aa82e8",
+      "size": 1030
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Projects/VisualBasic/CustomPropertiesSample/testpo.xml",
+      "ext": ".xml",
+      "sha256": "f9033750ac0282669985f03b432a782ae5e541df05e08338f18ef7ec82a2ea7b",
+      "size": 864
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/CSharp/CustomEvent.cst",
+      "ext": ".cst",
+      "sha256": "ec36ce7b4343c9c6e9f8894ce03402ce6aed52bf8e89e9da1e723d0eb84a12b2",
+      "size": 4223
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/CSharp/CustomException.cst",
+      "ext": ".cst",
+      "sha256": "334ca7ec05129b1218ccb0b207bac531af2112bad182189f28f9ba4ada7849ec",
+      "size": 7620
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/CSharp/TableEnum.cst",
+      "ext": ".cst",
+      "sha256": "1a1b24626d1cafa1f98e28b248605b39d2865b2bbf3ff9a4a63c5edb98d4e0bf",
+      "size": 858
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/CSharp/TableProperties.cst",
+      "ext": ".cst",
+      "sha256": "1fd79a04d4d9b3dd7157cae09ad3459ee4447557b388d2c1516a2d722a808a36",
+      "size": 995
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Alert.cst",
+      "ext": ".cst",
+      "sha256": "8da52959e384456aa3916f195c8fe2d170d4055040e22e67656d2be290f4083f",
+      "size": 715
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Breadcrumbs.cst",
+      "ext": ".cst",
+      "sha256": "66f873a052e8b943262862949b67876bc6d9c412579c70fe3ec1beb7eeb86b8f",
+      "size": 591
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.ButtonDropdown.cst",
+      "ext": ".cst",
+      "sha256": "864d84b8b11dcc14e52441e8743b5867890000e7a0249ea320d40ea66c07d2e6",
+      "size": 1093
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.ButtonGroup.cst",
+      "ext": ".cst",
+      "sha256": "dd98467eab36ba5f9e448a7ccc5040f547c6bc723c7956465383a2564446fad5",
+      "size": 481
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Dropdown.cst",
+      "ext": ".cst",
+      "sha256": "affaeb5ff430efcb858bbf096216984d899a77a743df4128a6a4f91200518452",
+      "size": 1005
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Header.cst",
+      "ext": ".cst",
+      "sha256": "2a2f96fd9a853503d5c8334c0ab1c9df6b93ef17c0c80cc2f3ca870f902910ee",
+      "size": 844
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Jumbotron.cst",
+      "ext": ".cst",
+      "sha256": "592cd1fd011061e17523832e715c09c2f4fcbc0c2427d846fd6dca69ebbc85c2",
+      "size": 703
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.ListGroup.cst",
+      "ext": ".cst",
+      "sha256": "9d8cd971a78e7bc3296efe4cd715dec89594b27d00d9a695749f8fdc40f86918",
+      "size": 479
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Media.cst",
+      "ext": ".cst",
+      "sha256": "19c0af19e9247a458ae43a58d562fce9c91f58b99f78c5836559a74a1fa9e64d",
+      "size": 943
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Pagination.cst",
+      "ext": ".cst",
+      "sha256": "824c8000155cd3d77d11f50b3f3e16e5a7bc7d1f5b8604dc6559177641269f3f",
+      "size": 700
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Progress.cst",
+      "ext": ".cst",
+      "sha256": "ef76b079af194efe4b66d6f3d2ea35d10161dbb2410a0180b3b5c784a944681d",
+      "size": 685
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Tabs.cst",
+      "ext": ".cst",
+      "sha256": "d2681dfb8236741b5d06eb68bf58897928d0e9d3753128e0870639859910dcf3",
+      "size": 786
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/HTML/Bootstrap.Textbox.cst",
+      "ext": ".cst",
+      "sha256": "14b1c9725a494e824722ed59cbbb8c064ec0acb68a1ba39edff83e0550153371",
+      "size": 902
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/TypeScript/JsonToClasses.cst",
+      "ext": ".cst",
+      "sha256": "e949ba43744537b06b931ec5de69bd10f783eddf16b13432d92f318288737fac",
+      "size": 5974
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/VisualBasic/CustomEvent.cst",
+      "ext": ".cst",
+      "sha256": "61601cde069116f8180a65029ac44d7272d281253cf2d30b3ca00f3ca197cf3a",
+      "size": 4879
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/VisualBasic/CustomException.cst",
+      "ext": ".cst",
+      "sha256": "60bf07ac7ea72266a63224a1c99b69f2bf9aa996eccb5f5b8ca0848ec10edbbd",
+      "size": 8913
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/VisualBasic/TableEnum.cst",
+      "ext": ".cst",
+      "sha256": "9ddf74d0f5fda28f4ffd0b632880fe064568563602801e072be12a70f473bb78",
+      "size": 724
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/ActiveSnippets/VisualBasic/TableProperties.cst",
+      "ext": ".cst",
+      "sha256": "8ff4f505103e15fd6bb3f86cb2798e1897d9604da42351f91fd8d49a706ef378",
+      "size": 1232
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/CommandWrapper/CSharp/AllCommandWrappers.cst",
+      "ext": ".cst",
+      "sha256": "cbdc5901413644af3218d7f402960814e3b6e1e1ce42795b0be2c62ace849f3c",
+      "size": 5832
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/CommandWrapper/CSharp/CommandWrapperClass.cst",
+      "ext": ".cst",
+      "sha256": "7170bf4aaae3d71f17b2c49c03f478ff371bafcb280313f3682d7573e5dd563d",
+      "size": 41797
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/CommandWrapper/VisualBasic/AllCommandWrappers.cst",
+      "ext": ".cst",
+      "sha256": "cce5187eed07214a8e21e5fe1d56b19db720e1117d36439c87c75d39e33380bc",
+      "size": 5973
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/CommandWrapper/VisualBasic/CommandWrapperClass.cst",
+      "ext": ".cst",
+      "sha256": "cfc2662f844e3a0f509a370d57e13409e327bfacad2ddc81e101340452a588c0",
+      "size": 43781
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/ActiproSoftware.SQL.xml",
+      "ext": ".xml",
+      "sha256": "2f006c3e0d5b985cd718e999ee3edd43a870100b1796a25ef9712e088a3e4ada",
+      "size": 10624
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/Database.csp",
+      "ext": ".csp",
+      "sha256": "783c936672bb45c6b2417828e2d8fd745305ccdbba736ba6ace369b22ba256df",
+      "size": 451
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/footer.cst",
+      "ext": ".cst",
+      "sha256": "7ba6291df29ed7915a067881a1bf7ef74906a05546979e87f9be4e74103eb2b7",
+      "size": 1062
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/general.cst",
+      "ext": ".cst",
+      "sha256": "a77be249096851b8fc94adaee4118518639a5490af1cbbbeb7952a55b6ff1a24",
+      "size": 1426
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/header.cst",
+      "ext": ".cst",
+      "sha256": "d618bc94715d3ce72fd2914de7d9eaf6c55b104b914a82580b53c70fd554f8b2",
+      "size": 2586
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/master.cst",
+      "ext": ".cst",
+      "sha256": "769d22d95709f025c903dc94e1b120949ecf1914fb8eccdda6ef87424e0bb156",
+      "size": 4940
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/sproc_details.cst",
+      "ext": ".cst",
+      "sha256": "78d25e4df4fcdec0a57ab66e46ed95edf51063a41f6c95dd03a341db670f4d08",
+      "size": 3548
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/sproc_summary.cst",
+      "ext": ".cst",
+      "sha256": "dcf91deeb21b1669be351e2c5a2f53db4f9d3a7cdfe97d37d48f010af98d24e2",
+      "size": 1442
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/sproc_text.cst",
+      "ext": ".cst",
+      "sha256": "59aa746dabe07a6de67ad93c4efc885927018729a605302c6111799d76ac2e15",
+      "size": 1956
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/sprocs.cst",
+      "ext": ".cst",
+      "sha256": "48d01facd1ef8b95a7d6b8292eb3d173cb382123d5142fd0a52ef87364aee788",
+      "size": 3880
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/table_details.cst",
+      "ext": ".cst",
+      "sha256": "0bfa14d8bf1650ce24f3fa61926ce471794c4d73c7c535f9a76f11afa3f4429a",
+      "size": 5232
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/table_summary.cst",
+      "ext": ".cst",
+      "sha256": "08cdd5b019e5fd016a4ad2cae81db6e5dc6d06f617e42e0480bbbbafb5cce113",
+      "size": 1387
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/tables.cst",
+      "ext": ".cst",
+      "sha256": "ff507b762161c7f07332b4bf4eecea812d495639ab4bf00fc49570a6f997d221",
+      "size": 3330
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/view_details.cst",
+      "ext": ".cst",
+      "sha256": "5d74aeaedf1f5fd0c859f8c0a603274172bdcad1679f4b85104f8b0482faf95c",
+      "size": 2461
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/view_summary.cst",
+      "ext": ".cst",
+      "sha256": "51da43ab4219f994d0820b3a1fd5282248d0b7e867d4ce7dde7c8c43d12aec66",
+      "size": 1397
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/view_text.cst",
+      "ext": ".cst",
+      "sha256": "25209abd2600d439bbe152c3462c9d6375e4a631787255ae68b9cdfd8eec6fb4",
+      "size": 1894
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DBDocumenter/views.cst",
+      "ext": ".cst",
+      "sha256": "89928f330bdcd15874cab6ba8fb438c6c7efcb8cb31a92a64312031bc3b7381b",
+      "size": 3840
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/DbSnapshot.cst",
+      "ext": ".cst",
+      "sha256": "fefa13fa88c2137a7bcf7c7cfde45711d2218e016d77d14ad050be995c0bc493",
+      "size": 11865
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/SubTemplates/FunctionSchema.cst",
+      "ext": ".cst",
+      "sha256": "e61a32deae8f6fc8d7d1d3bc3b6ec3624861849d26121ec0d9e41e01edbc2b2d",
+      "size": 5076
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/SubTemplates/ProcSchema.cst",
+      "ext": ".cst",
+      "sha256": "d4d60ab1a10e8c18db691649d5bacea8a1927413acf1d0179022b5f1489d408c",
+      "size": 4402
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/SubTemplates/TableData.cst",
+      "ext": ".cst",
+      "sha256": "f35bfbb27df8fa7e282310f58603d4a3b6dad997c2afa42ee41d557d5c984dcd",
+      "size": 20670
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/SubTemplates/TableSchema.cst",
+      "ext": ".cst",
+      "sha256": "44a84b8178c4e39e76d14571c44ffd25c904f394f70838a67323ccb60aa10c12",
+      "size": 24171
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/DbSnapshot/SubTemplates/ViewSchema.cst",
+      "ext": ".cst",
+      "sha256": "55b964eb452b2bd19d841c51064c56bbe4ef0a8f2ea7dcbb0cfad64c4334a20b",
+      "size": 2469
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/Other/CSharp/BusinessObject.cst",
+      "ext": ".cst",
+      "sha256": "3d3ee2503aa495023936a5dc9ab0d05b4076faf5ce91504595718c24e96281c5",
+      "size": 10331
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/Other/CSharp/ExtendedProperties.cst",
+      "ext": ".cst",
+      "sha256": "b9170ead89b1e4154c95e0f293d8fb98af5b41abd4230929c022ff593f5cb1ce",
+      "size": 3694
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/Other/CSharp/ScriptTableData.cst",
+      "ext": ".cst",
+      "sha256": "9e932a8f89eb240f43837ab63bed5d4bb076392b72838194826903e0fdc14008",
+      "size": 3557
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/Other/VisualBasic/BusinessObject.cst",
+      "ext": ".cst",
+      "sha256": "2557ccae7acef479138d10ccca74541f826b9912fd2d8e979351a2158df50c21",
+      "size": 10727
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/StoredProcedures/AllStoredProcedures.cst",
+      "ext": ".cst",
+      "sha256": "4094cad9dc86ac3e06d41f0c5d5426a0d24e25204fe4a82713d4ca27bdda24e8",
+      "size": 4144
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/StoredProcedures/StoredProcedureDescriptions.cst",
+      "ext": ".cst",
+      "sha256": "bf614f3a52938dbd66883bd09605e295978fa8eae4c96ede947eb81535928744",
+      "size": 9700
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Database/StoredProcedures/StoredProcedures.cst",
+      "ext": ".cst",
+      "sha256": "32de6a642f77c4f9524d48015b5d4cd6b0b83ccdf3fa0dc3e7ac0260e73618ae",
+      "size": 37270
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/ChainOfCommand.cst",
+      "ext": ".cst",
+      "sha256": "1da91970386214d6a65d85d322623342179c891f6302ebd6df59b2011c6d614e",
+      "size": 5240
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Command.cst",
+      "ext": ".cst",
+      "sha256": "2ff7697f8a065a5d39c079586c0bf1824871b9fa8fd0045beacc70881d93fb8a",
+      "size": 5273
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Interpreter.cst",
+      "ext": ".cst",
+      "sha256": "2ae10cf07d8d2f7cc87f5b79592ea238f68c3e9aa8bd0f1ed687b4bdfe679d8a",
+      "size": 3813
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Iterator.cst",
+      "ext": ".cst",
+      "sha256": "3a9af6516f467bd0fd128b94325572765afef78e49ead3b02d1a1d4d347fa7b2",
+      "size": 7327
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Mediator.cst",
+      "ext": ".cst",
+      "sha256": "cd73f40071d871e7a5777e2dea5b12dd5e57d57cc68ca3c5440665b6a1741f40",
+      "size": 6524
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Memento.cst",
+      "ext": ".cst",
+      "sha256": "cb511b7d172e76f9f1405f367305b0e3546dd3e5b279e72213f15581b707f54c",
+      "size": 4200
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Observer.cst",
+      "ext": ".cst",
+      "sha256": "735bd1bf5a4483785cca0461a39db0c820dbb342782b9fcdd58e2ac18b8ab356",
+      "size": 6095
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/State.cst",
+      "ext": ".cst",
+      "sha256": "5e0ab544cf63f277e06dcf1a6658db32aec2f6ab07f7f015bd395cc319aaebaf",
+      "size": 4382
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Strategy.cst",
+      "ext": ".cst",
+      "sha256": "04672f0bc5a7d4c14aec120fbca073972efdc59cacf24e6428ce2dd8d4be351f",
+      "size": 5070
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/TemplateMethod.cst",
+      "ext": ".cst",
+      "sha256": "c043d240cf6403bc510e9da078b8fc72b47d9863a6d2e28c8175eaee8c030ca5",
+      "size": 5562
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Behavioral/Visitor.cst",
+      "ext": ".cst",
+      "sha256": "9bb0f183e3b1579fc58cac3e3447cea2729584bab26a92fe7c788641061d6768",
+      "size": 8368
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Creational/AbstractFactory.cst",
+      "ext": ".cst",
+      "sha256": "7e179ea340e33f5f4c7f04137d75610424a8e8d633271b707cc090695741525c",
+      "size": 7778
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Creational/Builder.cst",
+      "ext": ".cst",
+      "sha256": "8f24168771c9a87f35d311365a077c5fbe6cbbc685260e8861c7267f1139692a",
+      "size": 6225
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Creational/FactoryMethod.cst",
+      "ext": ".cst",
+      "sha256": "62fccdd02d630c4aa4a20a69b16e798c434d8343b31a5e05e4115fcbae28959f",
+      "size": 5281
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Creational/Prototype.cst",
+      "ext": ".cst",
+      "sha256": "7bd7ce59e9f585caad3f84dd66a6170ea956ca1f11170308966303e6a8fd45bf",
+      "size": 4166
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Creational/Singleton.cst",
+      "ext": ".cst",
+      "sha256": "a64f1778efbf885d58a690c07853302bb6ed63a584599b48bc835c4165a26e0f",
+      "size": 2619
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Adapter.cst",
+      "ext": ".cst",
+      "sha256": "59ad449bb68b41e66f039ad4c0a15ad3be44e14f7edddd7e1e890d3766e545f6",
+      "size": 2981
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Bridge.cst",
+      "ext": ".cst",
+      "sha256": "b11e226c377a7359085b3e25b1def23c66b64b1ae1bc1f630a80b020d6802ca2",
+      "size": 4613
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Composite.cst",
+      "ext": ".cst",
+      "sha256": "fc32d09e54d3a85bb3e47e5b7a0f97f80008d822f315d8d7a7c64110f8f3c852",
+      "size": 5217
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Decorator.cst",
+      "ext": ".cst",
+      "sha256": "f2573bcf691406090a16ccfdfb03e8cf440e7009ac0d5f2772c0bf1a15d371ce",
+      "size": 5014
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Fa\u00e7ade.cst",
+      "ext": ".cst",
+      "sha256": "157f872d4679444bbba8c43c26c904217053e998eb8126bd0b092e8c13ca5fdc",
+      "size": 4488
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Flyweight.cst",
+      "ext": ".cst",
+      "sha256": "c45d3abc48e6d1259d5498c684b05321f1c9b82f3392e3467875c0655ae3f4b2",
+      "size": 5576
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Design Patterns/Structural/Proxy.cst",
+      "ext": ".cst",
+      "sha256": "952dde007409175fb6a31200b1e0090acf93e0bddef254c2b4a93e2b4577988e",
+      "size": 3181
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/CodeBehind.cst",
+      "ext": ".cst",
+      "sha256": "23618f0df7182cb9d7366c0d6d0518b89223f9fbf620be03edf3b27cc8482fe6",
+      "size": 1239
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/CodeSmith101/sample1.cst",
+      "ext": ".cst",
+      "sha256": "7b4b8fd253969cf2116a5b9d084ed29625522f2c79611c3ce3e43bf53ac9b495",
+      "size": 495
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/CodeSmith101/sample2.cst",
+      "ext": ".cst",
+      "sha256": "95d9dd68ac461cf4528f7da1d1f7af6db4916210b4f555fe5d78fef65cffe7af",
+      "size": 691
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/CodeSmith101/sample3.cst",
+      "ext": ".cst",
+      "sha256": "45aa748daa0e612c0e11f8665d22f18bbf028af080479cb9397407cd8a67e3bd",
+      "size": 504
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/CodeSmith101/sample4.cst",
+      "ext": ".cst",
+      "sha256": "d1427016a0805eb63a5c652cf16f1ce23b8b2994dbbb60343e68df64e50747ab",
+      "size": 1229
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/Includes/HeaderInclude.cst",
+      "ext": ".cst",
+      "sha256": "9db759b17559962a66285b9eafd2414478449176367091f301f7df32ff7ba6f3",
+      "size": 53
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/Includes/Includes.cst",
+      "ext": ".cst",
+      "sha256": "e9cefdaf0d0879a73df715119e064f8fb0db0ea1925cffb8f698ef9590ac2583",
+      "size": 268
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/MasterTemplate.cst",
+      "ext": ".cst",
+      "sha256": "21147497d5a1be10258e88b74503943ce147ec425cb48347d63fddeba5087ac4",
+      "size": 385
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/PartialTemplate.cst",
+      "ext": ".cst",
+      "sha256": "d36c367f5dd72dce3b25d65c8c5596816a4d41e11454dfa01912e9fdf02598f4",
+      "size": 628
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/ProgressReporting.cst",
+      "ext": ".cst",
+      "sha256": "9a3718be827921740814b227e3bb79114907ac7717f582fb3883d09e282356f4",
+      "size": 701
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/SimpleTemplate.cst",
+      "ext": ".cst",
+      "sha256": "238de3af966cd93d287cdc7236f5383c234eb1d37da4eb7f728ddf6771fa6424",
+      "size": 695
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/SubTemplate.cst",
+      "ext": ".cst",
+      "sha256": "63e1226baf51148064ddbfb7dcad459e211cb7d8683f41bce5e5659782c1cd89",
+      "size": 326
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/TemplateScript.cst",
+      "ext": ".cst",
+      "sha256": "38aa008a225edf92eeb1c84a789aa1b7b37efaf3ade7c7a1257932dc8632e96f",
+      "size": 1230
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/CSharp/UsingLinq.cst",
+      "ext": ".cst",
+      "sha256": "3d0823c1f0ecf6880cf3399d7e5c4d1a4d80974da7958acb54f6fba13ae8eab2",
+      "size": 663
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/JavaScript/SimpleTemplate.cst",
+      "ext": ".cst",
+      "sha256": "6fc6170e31c01342efc8fb4b4ee370d6d3a7c80fd2396628f0694d34a12aea3b",
+      "size": 652
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/JavaScript/TemplateScript.cst",
+      "ext": ".cst",
+      "sha256": "099f795ffd838153d51b13f168c99a1c14ad730c8760a2081982db698a82cbc7",
+      "size": 768
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/CodeBehind.cst",
+      "ext": ".cst",
+      "sha256": "b9a0107c765bcb08b5be9d0ba5c4437c91f91cbf2b06f9fbc730dfa238220284",
+      "size": 1396
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/CodeSmith101/sample1.cst",
+      "ext": ".cst",
+      "sha256": "c80d1c6d614dfbdc25e5648ea1e965445e8b3d5827220e0db10aedb67456e588",
+      "size": 550
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/CodeSmith101/sample2.cst",
+      "ext": ".cst",
+      "sha256": "3130c80ba573e99466a9807bd892745d88150f3edfc28e0074d07fbe24cb8902",
+      "size": 763
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/CodeSmith101/sample3.cst",
+      "ext": ".cst",
+      "sha256": "12b1108971d85644fb1933ebdd62df1771064e1ccc481b1e52cc521e162339dd",
+      "size": 556
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/CodeSmith101/sample4.cst",
+      "ext": ".cst",
+      "sha256": "07f89b16df18509c21559b9527e163618d96b3a866578e8b706bc6669095aaeb",
+      "size": 1376
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/MasterTemplate.cst",
+      "ext": ".cst",
+      "sha256": "d76f964cb757b74688fbea163ebd7c840e174ee88d17673ccd86262f0b0b9de1",
+      "size": 493
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/PartialTemplate.cst",
+      "ext": ".cst",
+      "sha256": "23b8370e66e77437766cb3180c5619b0e825f5bb54b25ab7c7401c3feab10630",
+      "size": 628
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/SimpleTemplate.cst",
+      "ext": ".cst",
+      "sha256": "6e251d8328de1875d352abd0d04c3e0f43238db8ec3f9a75abd6c4c01d36cc61",
+      "size": 732
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/SubTemplate.cst",
+      "ext": ".cst",
+      "sha256": "6c4aa52c0461c8acaa77001b64bc560ec570ad371ad22de8d399b5198535fe38",
+      "size": 329
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/TemplateScript.cst",
+      "ext": ".cst",
+      "sha256": "a9abf61832c3ed26f81e2ed6cabadee51409dff93463cd45d22a9b850456ee29",
+      "size": 1452
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/BasicSamples/VisualBasic/UsingLinq.cst",
+      "ext": ".cst",
+      "sha256": "cb824cfdf3ac7f35ec049b10b70b8ed7fec72ea5744b7273dabb790383970156",
+      "size": 709
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Maps/MapSample.csmap",
+      "ext": ".csmap",
+      "sha256": "03666d00b9330859756a6e0d72e27e99a3b07e074895d59e02f8530c59518c3a",
+      "size": 347
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Maps/MapSample.cst",
+      "ext": ".cst",
+      "sha256": "e55adc0e3cb69da9595874524b478b332906359534518951ae5873ddebf7fc03",
+      "size": 2081
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/CSharp/InsertRegionSample.cst",
+      "ext": ".cst",
+      "sha256": "dd88f7d0bed1b25a88385174089fd12daa4e69027014fbeb0e0e83bd5e243e7b",
+      "size": 201
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/CSharp/MergeSamples.csp",
+      "ext": ".csp",
+      "sha256": "60db6f1487d9609b08f9e08cb7502b3003000a2c429701ee790cebd8b40cc7c1",
+      "size": 545
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/CSharp/PreserveRegionsSample.cst",
+      "ext": ".cst",
+      "sha256": "91b030b66a8c26e52e90384ba56c5caaca4acacfdfc20fe9454ca4ea9d76f170",
+      "size": 938
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/JavaScript/InsertRegionSample.cst",
+      "ext": ".cst",
+      "sha256": "a39c7f98ffaf4e2895fe827df8b03fbd2f7d1f9a49f6e33a362ad9390773aa1f",
+      "size": 217
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/JavaScript/MergeSamples.csp",
+      "ext": ".csp",
+      "sha256": "4c09f1e84bd2d5f5ffa52a94cf87ca6a21c34e573784982d3c951af203571121",
+      "size": 545
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/JavaScript/PreserveRegionsSample.cst",
+      "ext": ".cst",
+      "sha256": "e6a4a9ccf6db5050aa343e4de12d89d03ed08eed7068d7b74b6bab37b8340823",
+      "size": 1001
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/SQL/MergeSamples.csp",
+      "ext": ".csp",
+      "sha256": "94540c1dd478b45bbf4ede1efedf656a6df4d88b87c4fe09833ee79639c521d8",
+      "size": 360
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/SQL/PreserveRegionsSample.cst",
+      "ext": ".cst",
+      "sha256": "0b8e4c8c537c5c42c75376f220156836af2252c443382d653030ca6d2ab776f3",
+      "size": 492
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/VisualBasic/InsertRegionSample.cst",
+      "ext": ".cst",
+      "sha256": "95452e250f0fd011cc99c84a8e865f2a7e5d27644a32a5e217826851b68e4c4a",
+      "size": 194
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/VisualBasic/MergeSamples.csp",
+      "ext": ".csp",
+      "sha256": "bdeb00a361d339c18f32b51db0028539baccc988cb29b8f8d5feb7b1227de764",
+      "size": 546
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/VisualBasic/PreserveRegionsSample.cst",
+      "ext": ".cst",
+      "sha256": "39ff631fbb090d1c0c892efc4a18934b7f7242aa7398dab19b47558800c70357",
+      "size": 898
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/Xml/MergeSamples.csp",
+      "ext": ".csp",
+      "sha256": "48291a0c6e8717373e71f31724b3524ffa3f31ed76acd28518b69c7e4fbc882b",
+      "size": 340
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/Xml/PreserveRegionsSample.cst",
+      "ext": ".cst",
+      "sha256": "c9fcd4557aced571fd4a5d64bdd26a61cb68552b9d40ae69b617fa2fe2703f78",
+      "size": 1009
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Merge/Xml/PreserveRegionsSample.xml",
+      "ext": ".xml",
+      "sha256": "dbc2a6cd34dd5934bf733bda00ef9abf5a4eb9c4f6d9c903c12e680a5bb68651",
+      "size": 556
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/Entity.cst",
+      "ext": ".cst",
+      "sha256": "9b7f7437d96c13a08397e70d91a1d694dcb983c6ab99273c9f6afdfe900141ef",
+      "size": 2265
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/EntityMap.xsd",
+      "ext": ".xsd",
+      "sha256": "520db9b499ff365597fe05cbc9def72cc55790d59517a6b202c07c6b922c58a0",
+      "size": 2749
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/EntityMaster.csp",
+      "ext": ".csp",
+      "sha256": "ef251b544944512a88913e3a6d2527dc9bc50ec40eea7787f5a315a3f7f0d503",
+      "size": 346
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/EntityMaster.cst",
+      "ext": ".cst",
+      "sha256": "d08e7fa5ebc859bad4c4f7350787aee1efe37b06ae89e129c560da35eeabebdd",
+      "size": 2045
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/GenerateEntityMap.cst",
+      "ext": ".cst",
+      "sha256": "fbabe491c1b0451e7853e3c3344b258460fbe6657b28636af32353cdf79824d6",
+      "size": 2816
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/NorthwindMap.xml",
+      "ext": ".xml",
+      "sha256": "1d0b975f1a77539cf5d190e83c90326359b3817211ec475c7f66443c82a65f02",
+      "size": 15087
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/PurchaseOrder.cst",
+      "ext": ".cst",
+      "sha256": "323ebc428d20a158df0fa2602fd0d9bb3382ede41a8d6426593775fadda2bf92",
+      "size": 1175
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/PurchaseOrder.xsd",
+      "ext": ".xsd",
+      "sha256": "d6b167da44a37b77c5108cabdf5552058f008794a1bdd8584e1e300d3de861d5",
+      "size": 2271
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/CSharp/SamplePurchaseOrder.xml",
+      "ext": ".xml",
+      "sha256": "434ca9776fbe1d231b8c2fc65d895baa41fa47a1e7d3ec0126e4d8474347500a",
+      "size": 872
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/Entity.cst",
+      "ext": ".cst",
+      "sha256": "0239c15502b20714029f3c975ac19bdf861ca280179996da8792d6df3df7286a",
+      "size": 2438
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/EntityMap.xsd",
+      "ext": ".xsd",
+      "sha256": "520db9b499ff365597fe05cbc9def72cc55790d59517a6b202c07c6b922c58a0",
+      "size": 2749
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/EntityMaster.csp",
+      "ext": ".csp",
+      "sha256": "d52a9857e7f4a4bd71081c294aee0192cbdedecb6bcac7617f3a77b04aa6065a",
+      "size": 326
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/EntityMaster.cst",
+      "ext": ".cst",
+      "sha256": "3482fc1a28363c33d2d4335d4c7f734bd73a204a1e478fb7ac59a89522dd9290",
+      "size": 2129
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/NorthwindMap.xml",
+      "ext": ".xml",
+      "sha256": "1d0b975f1a77539cf5d190e83c90326359b3817211ec475c7f66443c82a65f02",
+      "size": 15087
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/PurchaseOrder.cst",
+      "ext": ".cst",
+      "sha256": "2b3c12f5558dc9d075b2509b89842c3171f8cbbbf156ebdc1e1c29d22641e168",
+      "size": 1243
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/PurchaseOrder.xsd",
+      "ext": ".xsd",
+      "sha256": "d6b167da44a37b77c5108cabdf5552058f008794a1bdd8584e1e300d3de861d5",
+      "size": 2271
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Examples/Xml/VisualBasic/SamplePurchaseOrder.xml",
+      "ext": ".xml",
+      "sha256": "434ca9776fbe1d231b8c2fc65d895baa41fa47a1e7d3ec0126e4d8474347500a",
+      "size": 872
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Other/Json/JsonToClasses.cst",
+      "ext": ".cst",
+      "sha256": "a087c56c22cf32b22ba9ef74724db0d880202c43afc9c9ab1cd94fb355393aeb",
+      "size": 4935
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Other/Json/sample.json",
+      "ext": ".json",
+      "sha256": "63ec44929227a6f640a1f913863f1ebcbfddaa66d2a3bd80df3c4cbf0d687143",
+      "size": 7089
+    },
+    {
+      "container": "Samples/Samples.zip",
+      "entry": "Templates/Other/Json/sample2.json",
+      "ext": ".json",
+      "sha256": "20ab30357eb79ebee7476026d2330a2e9edc89fbd4187789912e2e4ef1ced2c0",
+      "size": 10273
+    },
+    {
+      "container": "outer",
+      "entry": "AddIns/CodeSmith.BaseTemplates.xml",
+      "ext": ".xml",
+      "sha256": "0d04ce38862d39685a56c755d301a8ac19fd2b3a4999553c77dec7e996cd71c9",
+      "size": 26319
+    },
+    {
+      "container": "outer",
+      "entry": "AddIns/CodeSmith.CodeParser.xml",
+      "ext": ".xml",
+      "sha256": "a0f3410ab2ded46708e35ea9ceeb8b50b4323d789d0369443a7c98607769e37e",
+      "size": 855
+    },
+    {
+      "container": "outer",
+      "entry": "AddIns/CodeSmith.CustomProperties.xml",
+      "ext": ".xml",
+      "sha256": "5157f18197fd2bc47fd17e1cf3db30992654a1ab7e33e7661cdf91a53118891a",
+      "size": 110534
+    },
+    {
+      "container": "outer",
+      "entry": "AddIns/CodeSmith.InsertClassMergeStrategy.xml",
+      "ext": ".xml",
+      "sha256": "b8f1943b8fca1d7c400ad985d3f697910572df1664a1f0a65b9a915549e0e52e",
+      "size": 159
+    },
+    {
+      "container": "outer",
+      "entry": "AddIns/SchemaExplorer.xml",
+      "ext": ".xml",
+      "sha256": "3f6bfcd07e5450e043f6f7cdecb4dca7c172cd3e6fcf4ffafa10a6aff1cc9c4c",
+      "size": 206150
+    },
+    {
+      "container": "outer",
+      "entry": "Schemas/csmap.xsd",
+      "ext": ".xsd",
+      "sha256": "43de633a6b333738e4c93c8f522fa318453fecd33cb684e8ff9f3df6d4684618",
+      "size": 2264
+    },
+    {
+      "container": "outer",
+      "entry": "Schemas/csp.xsd",
+      "ext": ".xsd",
+      "sha256": "3285b42707bce2de85e68b5b0a765798813d985926786db2457aa902e1902f8e",
+      "size": 7904
+    },
+    {
+      "container": "outer",
+      "entry": "bin/CodeSmith.Core.xml",
+      "ext": ".xml",
+      "sha256": "35ca6a1c1e79152e224ef8f95c71fa5d1d99f4740faaca2cf7180f341f3268c4",
+      "size": 948384
+    },
+    {
+      "container": "outer",
+      "entry": "bin/CodeSmith.Engine.xml",
+      "ext": ".xml",
+      "sha256": "06d65847dc12bc2763780d84762983be17f3a76047317449a4713f36036e74da",
+      "size": 857703
+    }
+  ],
+  "extensions": [
+    ".cst",
+    ".csp",
+    ".csmap",
+    ".xsd",
+    ".xml",
+    ".json"
+  ],
+  "nested_zip_prefix": "Samples",
+  "schema": 1,
+  "source_zip": "Generator-85.zip",
+  "source_zip_sha256": "467d176d9ad5d0e37923b72a1d7d592e113e3ba82c4286b6e78f90ac58b3c5a8",
+  "total_entries": 192
+}
