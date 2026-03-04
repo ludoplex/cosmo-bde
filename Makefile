@@ -60,6 +60,9 @@ RULES := $(shell find $(SPECS_DIR) -name "*.rules" 2>/dev/null)
 APIS := $(shell find $(SPECS_DIR) -name "*.api" 2>/dev/null)
 GGOS := $(shell find $(SPECS_DIR) -name "*.ggo" 2>/dev/null)
 UIS := $(shell find $(SPECS_DIR) -name "*.ui" 2>/dev/null)
+CSTS := $(shell find $(SPECS_DIR) -name "*.cst" 2>/dev/null)
+CSPS := $(shell find $(SPECS_DIR) -name "*.csp" 2>/dev/null)
+CSMAPS := $(shell find $(SPECS_DIR) -name "*.csmap" 2>/dev/null)
 
 # Ring 2: Visual models (processed if tools available)
 DRAWIO := $(shell find $(MODEL_DIR) -name "*.drawio" 2>/dev/null)
@@ -84,7 +87,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity
+.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity opensmith-frontend-check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -106,6 +109,7 @@ help:
 	@echo "│  make opensmith-corpus-lock Build deterministic OpenSmith lock      │"
 	@echo "│  make opensmith-corpus      Extract RE fixture corpus               │"
 	@echo "│  make opensmith-parity      Run parity harness scaffold             │"
+	@echo "│  make opensmith-frontend-check Parse/AST roundtrip corpus check     │"
 	@echo "│  make e9studio     Build live reload tool                           │"
 	@echo "│  make feedback     Ring 0→1→2 feedback loop                         │"
 	@echo "│  make dev          Watch specs, auto-regen on change                │"
@@ -137,6 +141,9 @@ formats:
 	@echo "  .api:     $(words $(APIS)) files"
 	@echo "  .ggo:     $(words $(GGOS)) files"
 	@echo "  .ui:      $(words $(UIS)) files"
+	@echo "  .cst:     $(words $(CSTS)) files"
+	@echo "  .csp:     $(words $(CSPS)) files"
+	@echo "  .csmap:   $(words $(CSMAPS)) files"
 	@echo ""
 	@echo "── Ring 2: Visual Models ─────────────────────────────────────────────"
 	@echo "  .drawio:  $(words $(DRAWIO)) files (StateSmith)"
@@ -155,7 +162,7 @@ formats:
 # Ring 0 Tools (always build these first)
 # ══════════════════════════════════════════════════════════════════════════════
 
-RING0_TOOLS := $(BUILD_DIR)/schemagen $(BUILD_DIR)/lemon $(BUILD_DIR)/defgen $(BUILD_DIR)/smgen $(BUILD_DIR)/lexgen $(BUILD_DIR)/bddgen $(BUILD_DIR)/uigen $(BUILD_DIR)/hsmgen $(BUILD_DIR)/apigen $(BUILD_DIR)/implgen $(BUILD_DIR)/sqlgen $(BUILD_DIR)/msmgen $(BUILD_DIR)/siggen $(BUILD_DIR)/clipsgen
+RING0_TOOLS := $(BUILD_DIR)/schemagen $(BUILD_DIR)/lemon $(BUILD_DIR)/defgen $(BUILD_DIR)/smgen $(BUILD_DIR)/lexgen $(BUILD_DIR)/bddgen $(BUILD_DIR)/uigen $(BUILD_DIR)/hsmgen $(BUILD_DIR)/apigen $(BUILD_DIR)/implgen $(BUILD_DIR)/sqlgen $(BUILD_DIR)/msmgen $(BUILD_DIR)/siggen $(BUILD_DIR)/clipsgen $(BUILD_DIR)/opensmithgen
 
 tools: $(BUILD_DIR) $(RING0_TOOLS)
 	@echo "Ring 0 tools ready"
@@ -204,6 +211,9 @@ $(BUILD_DIR)/siggen: $(TOOLS_DIR)/siggen/siggen.c | $(BUILD_DIR)
 
 $(BUILD_DIR)/clipsgen: $(TOOLS_DIR)/clipsgen/clipsgen.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -I$(TOOLS_DIR)/clipsgen -o $@ $<
+
+$(BUILD_DIR)/opensmithgen: $(TOOLS_DIR)/opensmithgen/opensmithgen.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I$(TOOLS_DIR)/opensmithgen -o $@ $<
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Ring 1 Tools (optional velocity tools - portable via cosmocc)
@@ -368,6 +378,12 @@ opensmith-parity: opensmith-corpus
 			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--dry-run; \
 	fi
+
+opensmith-frontend-check: $(BUILD_DIR)/opensmithgen opensmith-corpus
+	@$(PYTHON) ./scripts/opensmith_frontend_check.py \
+		--tool "$(BUILD_DIR)/opensmithgen" \
+		--inventory "$(OPENSMITH_LOCK)" \
+		--corpus-dir "$(OPENSMITH_CORPUS_DIR)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Pattern Rules (format → output mapping)

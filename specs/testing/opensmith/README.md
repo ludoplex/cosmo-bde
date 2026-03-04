@@ -41,7 +41,13 @@ make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
-4. Run with an engine command (command receives each fixture path):
+4. Run parser/AST front-end roundtrip check (`opensmithgen`) on corpus fixtures:
+
+```bash
+make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+```
+
+5. Run with an engine command (command receives each fixture path):
 
 ```bash
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip" \

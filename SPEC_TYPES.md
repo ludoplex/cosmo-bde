@@ -23,9 +23,9 @@
 | `.feature` | bddgen | BDD test scenarios (Gherkin) | 0 | ✓ Working |
 | `.sql` | sqlgen | Database schema, queries | 0 | ✓ Working |
 | `.sig` | siggen | Function signatures, FFI bindings | 0 | ✓ Working |
-| `.cst` | cstgen (planned) | OpenSmith template source | 0/2 | ◐ Corpus + parity harness |
-| `.csp` | cspgen (planned) | OpenSmith template project orchestration | 0/2 | ◐ Corpus + parity harness |
-| `.csmap` | csmapgen (planned) | OpenSmith mapping rules | 0/2 | ◐ Corpus + parity harness |
+| `.cst` | opensmithgen | OpenSmith template source | 0/2 | ◐ Front-end parser + AST scaffold |
+| `.csp` | opensmithgen | OpenSmith template project orchestration | 0/2 | ◐ Front-end parser + AST scaffold |
+| `.csmap` | opensmithgen | OpenSmith mapping rules | 0/2 | ◐ Front-end parser + AST scaffold |
 
 **Legend:** ✓ Working | ◐ Spec Ready (needs generator) | ○ Stub | ✗ Missing
 
