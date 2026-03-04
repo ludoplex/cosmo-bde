@@ -66,7 +66,7 @@ typedef enum {
     MODE_ROUNDTRIP,
     MODE_CHECK_ROUNDTRIP,
     MODE_STATS
-} mode_t;
+} opensmith_mode_t;
 
 static void usage(const char *argv0) {
     fprintf(stderr,
@@ -656,7 +656,7 @@ static void emit_stats(FILE *out, const ast_doc_t *doc) {
 }
 
 int main(int argc, char **argv) {
-    mode_t mode = MODE_AST;
+    opensmith_mode_t mode = MODE_AST;
     const char *input = NULL;
     char *src = NULL;
     size_t src_len = 0;
