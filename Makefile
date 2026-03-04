@@ -43,6 +43,7 @@ endif
 OPENSMITH_LOCK := specs/testing/opensmith/corpus.lock.json
 OPENSMITH_CORPUS_DIR := $(BUILD_DIR)/opensmith/corpus
 OPENSMITH_PARITY_DIR := $(BUILD_DIR)/opensmith/parity
+OPENSMITH_FRONTEND_TOOL := $(BUILD_DIR)/opensmithgen.com
 
 # ══════════════════════════════════════════════════════════════════════════════
 # FORMAT DISCOVERY (the makefile discovers what to build)
@@ -87,7 +88,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity opensmith-frontend-check
+.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity opensmithgen-ape opensmith-frontend-check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -109,6 +110,7 @@ help:
 	@echo "│  make opensmith-corpus-lock Build deterministic OpenSmith lock      │"
 	@echo "│  make opensmith-corpus      Extract RE fixture corpus               │"
 	@echo "│  make opensmith-parity      Run parity harness scaffold             │"
+	@echo "│  make opensmithgen-ape      Build OpenSmith parser APE tool         │"
 	@echo "│  make opensmith-frontend-check Parse/AST roundtrip corpus check     │"
 	@echo "│  make e9studio     Build live reload tool                           │"
 	@echo "│  make feedback     Ring 0→1→2 feedback loop                         │"
@@ -379,9 +381,14 @@ opensmith-parity: opensmith-corpus
 			--dry-run; \
 	fi
 
-opensmith-frontend-check: $(BUILD_DIR)/opensmithgen opensmith-corpus
+opensmithgen-ape:
+	@$(PYTHON) ./scripts/build_opensmithgen_ape.py \
+		--source "$(TOOLS_DIR)/opensmithgen/opensmithgen.c" \
+		--output "$(OPENSMITH_FRONTEND_TOOL)"
+
+opensmith-frontend-check: opensmithgen-ape opensmith-corpus
 	@$(PYTHON) ./scripts/opensmith_frontend_check.py \
-		--tool "$(BUILD_DIR)/opensmithgen" \
+		--tool "$(OPENSMITH_FRONTEND_TOOL)" \
 		--inventory "$(OPENSMITH_LOCK)" \
 		--corpus-dir "$(OPENSMITH_CORPUS_DIR)"
 

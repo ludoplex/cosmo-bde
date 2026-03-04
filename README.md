@@ -137,6 +137,7 @@ make verify       # Regen + check for drift (CI gate)
 make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmithgen-ape
 make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make test         # Run BDD tests
 make clean        # Remove build artifacts

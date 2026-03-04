@@ -18,6 +18,7 @@ Current scope intentionally does not implement template execution. It delivers:
 make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmithgen-ape
 make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
@@ -41,6 +42,11 @@ To run parser/AST roundtrip checks over all `.cst/.csp/.csmap` fixtures:
 ```bash
 make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
+
+`opensmith-frontend-check` now uses the APE build script:
+
+- `scripts/build_opensmithgen_ape.py`
+- output binary: `build/opensmithgen.com`
 
 ## Lock File
 
