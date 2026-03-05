@@ -59,12 +59,6 @@ mkdir -p "$ARTIFACTS_DIR"
 while IFS= read -r fixture; do
     REL="${fixture#$CORPUS_DIR/}"
 
-    # build engine command: replace {input} token or append path
-    case "$ENGINE" in
-        *'{input}'*) CMD=$(printf '%s' "$ENGINE" | sed "s|{input}|$fixture|g") ;;
-        *)           CMD="$ENGINE $fixture" ;;
-    esac
-
     OUT_FILE="$ARTIFACTS_DIR/$REL.stdout"
     ERR_FILE="$ARTIFACTS_DIR/$REL.stderr"
     CODE_FILE="$ARTIFACTS_DIR/$REL.exitcode"
@@ -72,7 +66,8 @@ while IFS= read -r fixture; do
     mkdir -p "$(dirname "$OUT_FILE")"
 
     RC=0
-    sh -c "$CMD" > "$OUT_FILE" 2> "$ERR_FILE" || RC=$?
+    # Execute engine with fixture as separate argument (avoids shell injection)
+    "$ENGINE" "$fixture" > "$OUT_FILE" 2> "$ERR_FILE" || RC=$?
     printf '%d\n' "$RC" > "$CODE_FILE"
 done < "$TMPDIR_WORK/fixtures"
 
