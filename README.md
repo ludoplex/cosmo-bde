@@ -303,6 +303,9 @@ cosmo-bde/
 make              # Build Ring 0 tools + application
 make regen        # Auto-detect tools, regenerate all code
 make verify       # Regen + check for drift (CI gate)
+make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make test         # Run BDD tests
 make clean        # Remove build artifacts
 make help         # Show all targets
@@ -339,6 +342,7 @@ Uses stat-based polling (100ms latency). Works on all platforms APE supports.
 |----------|---------|
 | [WORKFLOW.md](./WORKFLOW.md) | Full workflow reference |
 | [SPEC_TYPES.md](./SPEC_TYPES.md) | All spec types and generators |
+| [docs/OPENSMITH_PARITY.md](./docs/OPENSMITH_PARITY.md) | OpenSmith RE parity harness scaffold |
 | [RING_CLASSIFICATION.md](./RING_CLASSIFICATION.md) | Tool ring assignments |
 | [STACKS_REFERENCE.md](./STACKS_REFERENCE.md) | Complete vendor tooling |
 | [LICENSES.md](./LICENSES.md) | License tracking |

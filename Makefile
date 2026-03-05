@@ -23,6 +23,7 @@
 # For native builds: make CC=cc
 CC ?= cc
 CFLAGS := -O2 -Wall -Werror -std=c11 -Wno-stringop-truncation
+PYTHON ?= python
 
 # ── Directories ───────────────────────────────────────────────────────────────
 BUILD_DIR := build
@@ -32,6 +33,16 @@ GEN_DIR := gen
 SRC_DIR := src
 VENDOR_DIR := vendor
 MODEL_DIR := model
+
+# OpenSmith RE corpus / parity scaffold (PR1)
+ifeq ($(OS),Windows_NT)
+OPENSMITH_ZIP ?= C:/Users/$(USERNAME)/Downloads/Generator-85.zip
+else
+OPENSMITH_ZIP ?= $(HOME)/Downloads/Generator-85.zip
+endif
+OPENSMITH_LOCK := specs/testing/opensmith/corpus.lock.json
+OPENSMITH_CORPUS_DIR := $(BUILD_DIR)/opensmith/corpus
+OPENSMITH_PARITY_DIR := $(BUILD_DIR)/opensmith/parity
 
 # ══════════════════════════════════════════════════════════════════════════════
 # FORMAT DISCOVERY (the makefile discovers what to build)
@@ -73,7 +84,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev
+.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -92,6 +103,9 @@ help:
 	@echo "│  make              Build Ring 0 tools + application                 │"
 	@echo "│  make regen        Regenerate all (auto-detect tools)               │"
 	@echo "│  make verify       Regen + drift check                              │"
+	@echo "│  make opensmith-corpus-lock Build deterministic OpenSmith lock      │"
+	@echo "│  make opensmith-corpus      Extract RE fixture corpus               │"
+	@echo "│  make opensmith-parity      Run parity harness scaffold             │"
 	@echo "│  make e9studio     Build live reload tool                           │"
 	@echo "│  make feedback     Ring 0→1→2 feedback loop                         │"
 	@echo "│  make dev          Watch specs, auto-regen on change                │"
@@ -328,6 +342,32 @@ regen: tools
 
 verify: tools
 	@./scripts/regen-all.sh --verify
+
+opensmith-corpus-lock:
+	@$(PYTHON) ./scripts/opensmith_corpus.py inventory \
+		--zip "$(OPENSMITH_ZIP)" \
+		--lock "$(OPENSMITH_LOCK)"
+
+opensmith-corpus: opensmith-corpus-lock
+	@$(PYTHON) ./scripts/opensmith_corpus.py extract \
+		--zip "$(OPENSMITH_ZIP)" \
+		--lock "$(OPENSMITH_LOCK)" \
+		--out-dir "$(OPENSMITH_CORPUS_DIR)"
+
+opensmith-parity: opensmith-corpus
+	@if [ -n "$(ENGINE)" ]; then \
+		$(PYTHON) ./scripts/opensmith_parity.py \
+			--inventory "$(OPENSMITH_LOCK)" \
+			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
+			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
+			--engine "$(ENGINE)"; \
+	else \
+		$(PYTHON) ./scripts/opensmith_parity.py \
+			--inventory "$(OPENSMITH_LOCK)" \
+			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
+			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
+			--dry-run; \
+	fi
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Pattern Rules (format → output mapping)
