@@ -369,19 +369,21 @@ static int parse_template(const char *buf, size_t len, ast_doc_t *doc, parse_err
     while (i < len) {
         size_t tag_start = find_token(buf, i, len, "<%");
         if (tag_start == (size_t)-1) {
-            /* Final literal segment: emit unconditionally (branchless) */
-            ast_node_t lit;
-            memset(&lit, 0, sizeof(lit));
-            lit.kind = NODE_LITERAL;
-            lit.start = i;
-            lit.end = len;
-            lit.line = line;
-            lit.col = col;
-            lit.raw_len = len - i;
-            lit.raw = xstrndup0(buf + i, lit.raw_len);
-            lit.body = xstrndup0(lit.raw, lit.raw_len);
-            add_node(doc, &lit);
-            advance_pos(buf, i, len, &line, &col);
+            /* Final literal segment: skip if empty */
+            if (i < len) {
+                ast_node_t lit;
+                memset(&lit, 0, sizeof(lit));
+                lit.kind = NODE_LITERAL;
+                lit.start = i;
+                lit.end = len;
+                lit.line = line;
+                lit.col = col;
+                lit.raw_len = len - i;
+                lit.raw = xstrndup0(buf + i, lit.raw_len);
+                lit.body = xstrndup0(lit.raw, lit.raw_len);
+                add_node(doc, &lit);
+                advance_pos(buf, i, len, &line, &col);
+            }
             break;
         }
 
@@ -585,8 +587,10 @@ static int reconstruct(const ast_doc_t *doc, char **out, size_t *out_len) {
     buf = (char *)xmalloc(total + 1);
     for (i = 0; i < doc->count; i++) {
         const ast_node_t *n = &doc->nodes[i];
-        memcpy(buf + off, n->raw, n->raw_len);
-        off += n->raw_len;
+        if (n->raw && n->raw_len > 0) {
+            memcpy(buf + off, n->raw, n->raw_len);
+            off += n->raw_len;
+        }
     }
     buf[off] = '\0';
     *out = buf;
