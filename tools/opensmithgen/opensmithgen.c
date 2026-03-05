@@ -41,6 +41,7 @@ typedef struct {
     int line;
     int col;
     char *raw;
+    size_t raw_len;
     char *inner;
     char *body;
     char *directive_name;
@@ -322,8 +323,21 @@ static void classify_node(ast_node_t *node) {
     tlen = strlen(trimmed);
 
     if (tlen >= 2 && trimmed[0] == '-' && trimmed[1] == '-') {
+        char *comment = dup_trimmed(trimmed + 2);
+        size_t clen = strlen(comment);
+
+        if (clen >= 2 && comment[clen - 1] == '-' && comment[clen - 2] == '-') {
+            size_t newlen = clen - 2;
+
+            while (newlen > 0 && isspace((unsigned char)comment[newlen - 1])) {
+                newlen--;
+            }
+
+            comment[newlen] = '\0';
+        }
+
         node->kind = NODE_COMMENT;
-        node->body = dup_trimmed(trimmed + 2);
+        node->body = comment;
         free(trimmed);
         return;
     }
@@ -355,7 +369,8 @@ static int parse_template(const char *buf, size_t len, ast_doc_t *doc, parse_err
     while (i < len) {
         size_t tag_start = find_token(buf, i, len, "<%");
         if (tag_start == (size_t)-1) {
-            if (tag_start != i) {
+            /* Final literal segment: skip if empty */
+            if (i < len) {
                 ast_node_t lit;
                 memset(&lit, 0, sizeof(lit));
                 lit.kind = NODE_LITERAL;
@@ -363,8 +378,9 @@ static int parse_template(const char *buf, size_t len, ast_doc_t *doc, parse_err
                 lit.end = len;
                 lit.line = line;
                 lit.col = col;
-                lit.raw = xstrndup0(buf + i, len - i);
-                lit.body = xstrndup0(lit.raw, strlen(lit.raw));
+                lit.raw_len = len - i;
+                lit.raw = xstrndup0(buf + i, lit.raw_len);
+                lit.body = xstrndup0(lit.raw, lit.raw_len);
                 add_node(doc, &lit);
                 advance_pos(buf, i, len, &line, &col);
             }
@@ -379,8 +395,9 @@ static int parse_template(const char *buf, size_t len, ast_doc_t *doc, parse_err
             lit.end = tag_start;
             lit.line = line;
             lit.col = col;
-            lit.raw = xstrndup0(buf + i, tag_start - i);
-            lit.body = xstrndup0(lit.raw, strlen(lit.raw));
+            lit.raw_len = tag_start - i;
+            lit.raw = xstrndup0(buf + i, lit.raw_len);
+            lit.body = xstrndup0(lit.raw, lit.raw_len);
             add_node(doc, &lit);
             advance_pos(buf, i, tag_start, &line, &col);
             i = tag_start;
@@ -404,7 +421,8 @@ static int parse_template(const char *buf, size_t len, ast_doc_t *doc, parse_err
             node.end = end;
             node.line = line;
             node.col = col;
-            node.raw = xstrndup0(buf + i, end - i);
+            node.raw_len = end - i;
+            node.raw = xstrndup0(buf + i, node.raw_len);
             node.inner = xstrndup0(buf + i + 2, close - (i + 2));
 
             classify_node(&node);
@@ -556,23 +574,22 @@ static int reconstruct(const ast_doc_t *doc, char **out, size_t *out_len) {
     size_t off = 0;
     char *buf;
 
+    /* Use stored raw_len for byte-accurate reconstruction (branchless) */
     for (i = 0; i < doc->count; i++) {
         const ast_node_t *n = &doc->nodes[i];
-        size_t raw_len = n->raw ? strlen(n->raw) : 0;
-        if (raw_len > ((size_t)-1) - total - 1) {
+        if (n->raw_len > ((size_t)-1) - total - 1) {
             fprintf(stderr, "error: output too large\n");
             return -1;
         }
-        total += raw_len;
+        total += n->raw_len;
     }
 
     buf = (char *)xmalloc(total + 1);
     for (i = 0; i < doc->count; i++) {
         const ast_node_t *n = &doc->nodes[i];
-        size_t raw_len = n->raw ? strlen(n->raw) : 0;
-        if (raw_len > 0) {
-            memcpy(buf + off, n->raw, raw_len);
-            off += raw_len;
+        if (n->raw && n->raw_len > 0) {
+            memcpy(buf + off, n->raw, n->raw_len);
+            off += n->raw_len;
         }
     }
     buf[off] = '\0';

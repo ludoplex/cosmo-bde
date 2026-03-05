@@ -23,7 +23,7 @@ done
 
 [ -n "$TOOL" ]       || die "--tool required"
 [ -n "$CORPUS_DIR" ] || die "--corpus-dir required"
-[ -f "$TOOL" ]       || die "tool not found: $TOOL"
+[ -x "$TOOL" ]       || die "tool not found or not executable: $TOOL"
 [ -d "$CORPUS_DIR" ] || die "corpus dir not found: $CORPUS_DIR"
 
 TMPDIR_WORK=$(mktemp -d)

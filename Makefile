@@ -382,7 +382,21 @@ opensmith-parity: opensmith-corpus
 
 opensmithgen-ape:
 	@mkdir -p "$(BUILD_DIR)"
-	@cosmocc $(CFLAGS) \
+	@COSMOCC=$$( \
+		if command -v cosmocc >/dev/null 2>&1; then \
+			printf '%s' "cosmocc"; \
+		elif [ -x "$$HOME/.cosmocc/bin/cosmocc" ]; then \
+			printf '%s' "$$HOME/.cosmocc/bin/cosmocc"; \
+		else \
+			printf 'cosmocc not found.\n' >&2; \
+			printf 'To build APE tools you need cosmocc installed.\n' >&2; \
+			printf 'Either:\n' >&2; \
+			printf '  - Install cosmocc and ensure it is on your PATH, or\n' >&2; \
+			printf '  - Install it under $$HOME/.cosmocc/bin/cosmocc.\n' >&2; \
+			exit 1; \
+		fi \
+	); \
+	"$$COSMOCC" $(CFLAGS) \
 		-o "$(OPENSMITH_FRONTEND_TOOL)" \
 		"$(TOOLS_DIR)/opensmithgen/opensmithgen.c"
 

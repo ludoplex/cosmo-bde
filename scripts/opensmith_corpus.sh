@@ -174,8 +174,8 @@ cmd_extract() {
     done
 
     # extract nested zip entries
-    NESTED_PREFIX=$(grep -o '"nested_zip_prefix":"[^"]*"' "$LOCK" 2>/dev/null \
-        | sed 's/"nested_zip_prefix":"//; s/"//' || printf 'Samples')
+    NESTED_PREFIX=$(grep -o '"nested_zip_prefix"[[:space:]]*:[[:space:]]*"[^"]*"' "$LOCK" 2>/dev/null \
+        | sed 's/.*"nested_zip_prefix"[[:space:]]*:[[:space:]]*"//; s/".*$//' || printf 'Samples')
     find "$TMPDIR_WORK/outer/$NESTED_PREFIX" -name '*.zip' -type f 2>/dev/null | sort | while IFS= read -r nzip; do
         NREL="${nzip#$TMPDIR_WORK/outer/}"
         NTMP="$TMPDIR_WORK/nested_$(basename "$nzip" .zip)"
