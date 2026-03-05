@@ -43,9 +43,9 @@ To run parser/AST roundtrip checks over all `.cst/.csp/.csmap` fixtures:
 make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
-`opensmith-frontend-check` now uses the APE build script:
+`opensmith-frontend-check` builds `opensmithgen` via `cosmocc` and runs
+`scripts/opensmith_frontend_check.sh` over corpus fixtures:
 
-- `scripts/build_opensmithgen_ape.py`
 - output binary: `build/opensmithgen.com`
 
 ## Lock File

@@ -23,7 +23,6 @@
 # For native builds: make CC=cc
 CC ?= cc
 CFLAGS := -O2 -Wall -Werror -std=c11 -Wno-stringop-truncation
-PYTHON ?= python
 
 # ── Directories ───────────────────────────────────────────────────────────────
 BUILD_DIR := build
@@ -356,25 +355,25 @@ verify: tools
 	@./scripts/regen-all.sh --verify
 
 opensmith-corpus-lock:
-	@$(PYTHON) ./scripts/opensmith_corpus.py inventory \
+	@sh ./scripts/opensmith_corpus.sh inventory \
 		--zip "$(OPENSMITH_ZIP)" \
 		--lock "$(OPENSMITH_LOCK)"
 
 opensmith-corpus: opensmith-corpus-lock
-	@$(PYTHON) ./scripts/opensmith_corpus.py extract \
+	@sh ./scripts/opensmith_corpus.sh extract \
 		--zip "$(OPENSMITH_ZIP)" \
 		--lock "$(OPENSMITH_LOCK)" \
 		--out-dir "$(OPENSMITH_CORPUS_DIR)"
 
 opensmith-parity: opensmith-corpus
 	@if [ -n "$(ENGINE)" ]; then \
-		$(PYTHON) ./scripts/opensmith_parity.py \
+		sh ./scripts/opensmith_parity.sh \
 			--inventory "$(OPENSMITH_LOCK)" \
 			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
 			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--engine "$(ENGINE)"; \
 	else \
-		$(PYTHON) ./scripts/opensmith_parity.py \
+		sh ./scripts/opensmith_parity.sh \
 			--inventory "$(OPENSMITH_LOCK)" \
 			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
 			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
@@ -382,14 +381,14 @@ opensmith-parity: opensmith-corpus
 	fi
 
 opensmithgen-ape:
-	@$(PYTHON) ./scripts/build_opensmithgen_ape.py \
-		--source "$(TOOLS_DIR)/opensmithgen/opensmithgen.c" \
-		--output "$(OPENSMITH_FRONTEND_TOOL)"
+	@mkdir -p "$(BUILD_DIR)"
+	@cosmocc $(CFLAGS) \
+		-o "$(OPENSMITH_FRONTEND_TOOL)" \
+		"$(TOOLS_DIR)/opensmithgen/opensmithgen.c"
 
 opensmith-frontend-check: opensmithgen-ape opensmith-corpus
-	@$(PYTHON) ./scripts/opensmith_frontend_check.py \
+	@sh ./scripts/opensmith_frontend_check.sh \
 		--tool "$(OPENSMITH_FRONTEND_TOOL)" \
-		--inventory "$(OPENSMITH_LOCK)" \
 		--corpus-dir "$(OPENSMITH_CORPUS_DIR)"
 
 # ══════════════════════════════════════════════════════════════════════════════
