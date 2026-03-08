@@ -283,29 +283,71 @@ tsan: clean all
 #
 # ══════════════════════════════════════════════════════════════════════════════
 
-E9STUDIO_DIR := vendors/submodules/e9studio
+E9STUDIO_VENDOR_DIR := vendors/submodules/e9studio
+E9STUDIO_FALLBACK_DIR ?= ../cosmo-e9studio
+E9STUDIO_LEGACY_DIR ?= ../e9studio
+ifeq ($(wildcard $(E9STUDIO_VENDOR_DIR)/Makefile),)
+ifneq ($(wildcard $(E9STUDIO_FALLBACK_DIR)/Makefile),)
+E9STUDIO_DIR := $(E9STUDIO_FALLBACK_DIR)
+else
+E9STUDIO_DIR := $(E9STUDIO_LEGACY_DIR)
+endif
+else
+E9STUDIO_DIR := $(E9STUDIO_VENDOR_DIR)
+endif
 E9PATCH_DIR := $(E9STUDIO_DIR)/src/e9patch
 E9LIVERELOAD_DIR := $(E9STUDIO_DIR)/test/livereload
+E9TOOL_BIN := $(BUILD_DIR)/e9tool
+E9PATCH_BIN := $(BUILD_DIR)/e9patch
+E9LIVERELOAD_SRC := $(E9LIVERELOAD_DIR)/livereload.c
+E9PROCMEM_SRC := $(E9PATCH_DIR)/e9procmem.c
 
 # e9studio livereload tool (uses unified procmem API)
-$(BUILD_DIR)/livereload: $(E9LIVERELOAD_DIR)/livereload.c $(E9PATCH_DIR)/e9procmem.c $(GEN_DIR)/domain/livereload_types.c | $(BUILD_DIR)
+$(BUILD_DIR)/livereload: $(E9LIVERELOAD_SRC) $(E9PROCMEM_SRC) $(GEN_DIR)/domain/livereload_types.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -I$(E9PATCH_DIR) -I$(GEN_DIR)/domain -o $@ $^
 
-e9studio: $(BUILD_DIR)/livereload
-	@echo "e9studio livereload tool built"
-	@echo "  Hot-patch running processes without ptrace"
-	@echo "  Usage: $(BUILD_DIR)/livereload <PID> [source_file]"
+$(E9TOOL_BIN) $(E9PATCH_BIN): | $(BUILD_DIR)
+	@if [ ! -x "$(E9STUDIO_DIR)/e9tool" ] || [ ! -x "$(E9STUDIO_DIR)/e9patch" ]; then \
+		echo "Building resolved e9studio tools from $(E9STUDIO_DIR)"; \
+		$(MAKE) -C "$(E9STUDIO_DIR)" clean >/dev/null 2>&1 || true; \
+		( cd "$(E9STUDIO_DIR)" && ./build.sh ); \
+	fi
+	@cp "$(E9STUDIO_DIR)/e9tool" "$(E9TOOL_BIN)"
+	@cp "$(E9STUDIO_DIR)/e9patch" "$(E9PATCH_BIN)"
+
+e9studio:
+	@if [ -f "$(E9LIVERELOAD_SRC)" ] && [ -f "$(E9PROCMEM_SRC)" ]; then \
+		$(MAKE) "$(BUILD_DIR)/livereload"; \
+		echo "e9studio livereload tool built"; \
+		echo "  Hot-patch running processes without ptrace"; \
+		echo "  Usage: $(BUILD_DIR)/livereload <PID> [source_file]"; \
+	else \
+		$(MAKE) "$(E9TOOL_BIN)" "$(E9PATCH_BIN)"; \
+		echo "e9studio tool bridge built from $(E9STUDIO_DIR)"; \
+		echo "  Using resolved e9tool/e9patch binaries from $(E9STUDIO_DIR)"; \
+		echo "  Usage: $(E9TOOL_BIN) --dump-all -M false -P empty <binary.dbg>"; \
+	fi
 
 livereload: e9studio
-	@echo ""
-	@echo "Live Reload Ready"
-	@echo "────────────────────────────────────────────────────────────────────"
-	@echo "  1. Build and run your app: make run"
-	@echo "  2. In another terminal:    $(BUILD_DIR)/livereload \$$(pgrep app) src/main.c"
-	@echo "  3. Edit src/main.c and save - changes appear instantly!"
-	@echo ""
-	@echo "Note: No sudo needed for processes you own (uses process_vm_writev)"
-	@echo ""
+	@if [ -f "$(E9LIVERELOAD_SRC)" ] && [ -f "$(E9PROCMEM_SRC)" ]; then \
+		echo ""; \
+		echo "Live Reload Ready"; \
+		echo "────────────────────────────────────────────────────────────────────"; \
+		echo "  1. Build and run your app: make run"; \
+		echo "  2. In another terminal:    $(BUILD_DIR)/livereload \$$(pgrep app) src/main.c"; \
+		echo "  3. Edit src/main.c and save - changes appear instantly!"; \
+		echo ""; \
+		echo "Note: No sudo needed for processes you own (uses process_vm_writev)"; \
+		echo ""; \
+	else \
+		echo ""; \
+		echo "Live Reload Harness Missing in $(E9STUDIO_DIR)"; \
+		echo "────────────────────────────────────────────────────────────────────"; \
+		echo "  The resolved e9studio checkout currently provides e9tool/e9patch"; \
+		echo "  the older livereload.c + e9procmem.c harness is not present."; \
+		echo "  Use build/e9tool or downstream watch scripts for rebuild/analyze loops."; \
+		echo ""; \
+	fi
 
 # Feedback loop: Ring 0→1→2 composability with live reload
 feedback:
