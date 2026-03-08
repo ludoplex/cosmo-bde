@@ -5,32 +5,37 @@
 #include <string.h>
 
 /* Feature data */
-static const char *feature_0_name = "E9 Live Reload - Hot Patching APE Binaries";
+static const char *feature_names[] = {
+    "E9 Live Reload - Hot Patching APE Binaries",
+};
+static const int generated_feature_count = 1;
 
 /* Scenario data */
 typedef struct {
     const char *name;
+    int background_step_start;
+    int background_step_count;
     int step_start;
     int step_count;
     int feature_index;
 } scenario_info_t;
 
 static const scenario_info_t scenarios[] = {
-    {"Detect C source file changes", 0, 4, 0},
-    {"Ignore non-C files", 4, 3, 0},
-    {"Successful incremental compilation", 7, 6, 0},
-    {"Compilation failure handling", 13, 5, 0},
-    {"Generate patches from object diff", 18, 6, 0},
-    {"No patches when no functional changes", 24, 5, 0},
-    {"Apply patch via PE RVA", 29, 6, 0},
-    {"Apply patch to .rdata section", 35, 5, 0},
-    {"Reject patch overlapping ZipOS", 40, 5, 0},
-    {"Flush icache after code patch", 45, 4, 0},
-    {"Self-patching the running executable", 49, 5, 0},
-    {"Track live reload statistics", 54, 3, 0},
-    {"Revert a previously applied patch", 57, 6, 0},
-    {"Handle missing compiler gracefully", 63, 4, 0},
-    {"Handle unmappable target", 67, 4, 0},
+    {"Detect C source file changes", 0, 3, 3, 4, 0},
+    {"Ignore non-C files", 0, 3, 7, 3, 0},
+    {"Successful incremental compilation", 0, 3, 10, 6, 0},
+    {"Compilation failure handling", 0, 3, 16, 5, 0},
+    {"Generate patches from object diff", 0, 3, 21, 6, 0},
+    {"No patches when no functional changes", 0, 3, 27, 5, 0},
+    {"Apply patch via PE RVA", 0, 3, 32, 6, 0},
+    {"Apply patch to .rdata section", 0, 3, 38, 5, 0},
+    {"Reject patch overlapping ZipOS", 0, 3, 43, 5, 0},
+    {"Flush icache after code patch", 0, 3, 48, 4, 0},
+    {"Self-patching the running executable", 0, 3, 52, 5, 0},
+    {"Track live reload statistics", 0, 3, 57, 3, 0},
+    {"Revert a previously applied patch", 0, 3, 60, 6, 0},
+    {"Handle missing compiler gracefully", 0, 3, 66, 4, 0},
+    {"Handle unmappable target", 0, 3, 70, 4, 0},
 };
 static const int scenario_count = 15;
 
@@ -129,7 +134,8 @@ void E9LIVERELOAD_run_scenario(void *world, int scenario_index, E9LIVERELOAD_sta
 
     const scenario_info_t *sc = &scenarios[scenario_index];
     const char *feature_name = "";
-    if (sc->feature_index == 0) feature_name = feature_0_name;
+    if (sc->feature_index >= 0 && sc->feature_index < generated_feature_count)
+        feature_name = feature_names[sc->feature_index];
 
     printf("  Scenario: %s\n", sc->name);
 
@@ -139,6 +145,34 @@ void E9LIVERELOAD_run_scenario(void *world, int scenario_index, E9LIVERELOAD_sta
     ctx.feature = feature_name;
 
     int scenario_passed = 1;
+    for (int i = 0; i < sc->background_step_count; i++) {
+        int step_idx = sc->background_step_start + i;
+        if (step_idx < 0 || step_idx >= total_steps) break;
+
+        const step_info_t *st = &steps[step_idx];
+        ctx.step_text = st->text;
+        ctx.step_line = st->line_number;
+
+        const char *keyword = (st->keyword == 0) ? "Given" :
+                              (st->keyword == 1) ? "When" : "Then";
+        printf("    %s %s... ", keyword, st->text);
+
+        E9LIVERELOAD_result_t result = E9LIVERELOAD_PENDING;
+        if (st->function) {
+            result = st->function(&ctx);
+        }
+
+        printf("%s\n", result_names[result]);
+        stats->total_steps++;
+
+        if (result == E9LIVERELOAD_PASS) {
+            stats->passed_steps++;
+        } else {
+            stats->failed_steps++;
+            scenario_passed = 0;
+        }
+    }
+
     for (int i = 0; i < sc->step_count; i++) {
         int step_idx = sc->step_start + i;
         if (step_idx >= total_steps) break;
@@ -178,9 +212,14 @@ void E9LIVERELOAD_run_scenario(void *world, int scenario_index, E9LIVERELOAD_sta
 void E9LIVERELOAD_run_all(void *world, E9LIVERELOAD_stats_t *stats) {
     memset(stats, 0, sizeof(*stats));
 
-    printf("Feature: %s\n\n", feature_0_name);
-
+    int last_feature_index = -1;
     for (int i = 0; i < scenario_count; i++) {
+        const scenario_info_t *sc = &scenarios[i];
+        if (sc->feature_index != last_feature_index) {
+            if (i > 0) printf("\n");
+            printf("Feature: %s\n\n", feature_names[sc->feature_index]);
+            last_feature_index = sc->feature_index;
+        }
         E9LIVERELOAD_run_scenario(world, i, stats);
         printf("\n");
     }
