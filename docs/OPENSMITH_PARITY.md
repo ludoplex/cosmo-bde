@@ -1,15 +1,16 @@
 # OpenSmith Parity Harness (PR1)
 
-This document defines the PR1 foundation for reverse-engineering and parity
+This document defines the PR1/PR2 foundation for reverse-engineering and parity
 tracking against `Generator-85.zip`.
 
 ## Scope
 
-PR1 intentionally does not implement template execution. It delivers:
+Current scope intentionally does not implement template execution. It delivers:
 
 - deterministic corpus inventory lock
 - deterministic corpus extraction
 - execution harness scaffold (dry-run + baseline plumbing)
+- parser/AST front-end scaffold (`opensmithgen`) with roundtrip checks
 
 ## Commands
 
@@ -17,6 +18,8 @@ PR1 intentionally does not implement template execution. It delivers:
 make opensmith-corpus-lock OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-corpus OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+make opensmithgen-ape
+make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
 ```
 
 On Windows, prefer:
@@ -33,6 +36,17 @@ To execute an engine command per fixture:
 make opensmith-parity OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip" \
   ENGINE="cat {input}"
 ```
+
+To run parser/AST roundtrip checks over all `.cst/.csp/.csmap` fixtures:
+
+```bash
+make opensmith-frontend-check OPENSMITH_ZIP="$HOME/Downloads/Generator-85.zip"
+```
+
+`opensmith-frontend-check` builds `opensmithgen` via `cosmocc` and runs
+`scripts/opensmith_frontend_check.sh` over corpus fixtures:
+
+- output binary: `build/opensmithgen.com`
 
 ## Lock File
 

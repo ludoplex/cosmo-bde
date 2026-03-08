@@ -150,6 +150,36 @@ else
     echo "[apigen] Not built yet"
 fi
 
+# clipsgen (business rules generator)
+if [ -x "$BUILD_DIR/clipsgen" ]; then
+    echo "[clipsgen] Processing specs/**/*.rules..."
+    find "$SPECS_DIR" -name "*.rules" | while read -r spec; do
+        layer=$(basename "$(dirname "$spec")")
+        mkdir -p "$GEN_DIR/$layer"
+        name=$(basename "$spec" .rules)
+        echo "  $spec → gen/$layer/"
+        "$BUILD_DIR/clipsgen" "$spec" "$GEN_DIR/$layer" "$name" 2>/dev/null || \
+            echo "    (skipped - clipsgen parse error)"
+    done
+else
+    echo "[clipsgen] Not built yet"
+fi
+
+# sqlgen (SQLite bindings generator)
+if [ -x "$BUILD_DIR/sqlgen" ]; then
+    echo "[sqlgen] Processing specs/**/*.sql..."
+    find "$SPECS_DIR" -name "*.sql" | while read -r spec; do
+        layer=$(basename "$(dirname "$spec")")
+        mkdir -p "$GEN_DIR/$layer"
+        name=$(basename "$spec" .sql)
+        echo "  $spec → gen/$layer/"
+        "$BUILD_DIR/sqlgen" "$spec" "$GEN_DIR/$layer" "$name" 2>/dev/null || \
+            echo "    (skipped - sqlgen parse error)"
+    done
+else
+    echo "[sqlgen] Not built yet"
+fi
+
 # ── Ring 1 Generators (Velocity Tools - Auto-Detected) ───────────────────────
 
 echo
@@ -203,8 +233,13 @@ if command -v dotnet >/dev/null 2>&1; then
     find "$MODEL_DIR/statesmith" -name "*.drawio" 2>/dev/null | while read -r spec; do
         mkdir -p "$GEN_DIR/imported/statesmith"
         echo "  $spec → gen/imported/statesmith/"
-        # dotnet StateSmith.Cli run "$spec" --lang=C99 -o "$GEN_DIR/imported/statesmith" || echo "  (failed)"
-        echo "    (StateSmith invocation placeholder)"
+        if [ -f "$ROOT_DIR/vendors/submodules/StateSmith/src/StateSmith.Cli/StateSmith.Cli.csproj" ]; then
+            dotnet run --project "$ROOT_DIR/vendors/submodules/StateSmith/src/StateSmith.Cli/StateSmith.Cli.csproj" -- \
+                "$spec" --lang C99 -o "$GEN_DIR/imported/statesmith" 2>/dev/null || \
+                echo "    (StateSmith generation failed)"
+        else
+            echo "    (StateSmith CLI project not available)"
+        fi
     done
 else
     echo "[StateSmith] .NET not available, outputs must already be committed"
@@ -242,8 +277,8 @@ if command -v omc >/dev/null 2>&1; then
     find "$MODEL_DIR/openmodelica" -name "*.mo" 2>/dev/null | while read -r spec; do
         mkdir -p "$GEN_DIR/imported/modelica"
         echo "  $spec → gen/imported/modelica/"
-        # omc "$spec" +s +d=initialization --output="$GEN_DIR/imported/modelica" || echo "  (failed)"
-        echo "    (OpenModelica invocation placeholder)"
+        omc "$spec" +s +d=initialization --output="$GEN_DIR/imported/modelica" 2>/dev/null || \
+            echo "    (OpenModelica generation failed)"
     done
 else
     echo "[OpenModelica] Not available, outputs must already be committed"
@@ -260,8 +295,8 @@ if command -v matlab >/dev/null 2>&1; then
     find "$MODEL_DIR/simulink" -name "*.slx" 2>/dev/null | while read -r spec; do
         mkdir -p "$GEN_DIR/imported/simulink"
         echo "  $spec → gen/imported/simulink/"
-        # matlab -batch "slbuild('$spec')" || echo "  (failed)"
-        echo "    (Embedded Coder invocation placeholder)"
+        matlab -batch "slbuild('$spec')" 2>/dev/null || \
+            echo "    (Embedded Coder generation failed)"
     done
 else
     echo "[Embedded Coder] MATLAB not available, outputs must already be committed"
@@ -273,8 +308,8 @@ if command -v rhapsodycl >/dev/null 2>&1; then
     find "$MODEL_DIR/rhapsody" -name "*.emx" 2>/dev/null | while read -r spec; do
         mkdir -p "$GEN_DIR/imported/rhapsody"
         echo "  $spec → gen/imported/rhapsody/"
-        # rhapsodycl -generate "$spec" || echo "  (failed)"
-        echo "    (Rhapsody invocation placeholder)"
+        rhapsodycl -generate "$spec" 2>/dev/null || \
+            echo "    (Rhapsody generation failed)"
     done
 else
     echo "[Rhapsody] Not available, outputs must already be committed"

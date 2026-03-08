@@ -23,7 +23,6 @@
 # For native builds: make CC=cc
 CC ?= cc
 CFLAGS := -O2 -Wall -Werror -std=c11 -Wno-stringop-truncation
-PYTHON ?= python
 
 # ── Directories ───────────────────────────────────────────────────────────────
 BUILD_DIR := build
@@ -43,6 +42,7 @@ endif
 OPENSMITH_LOCK := specs/testing/opensmith/corpus.lock.json
 OPENSMITH_CORPUS_DIR := $(BUILD_DIR)/opensmith/corpus
 OPENSMITH_PARITY_DIR := $(BUILD_DIR)/opensmith/parity
+OPENSMITH_FRONTEND_TOOL := $(BUILD_DIR)/opensmithgen.com
 
 # ══════════════════════════════════════════════════════════════════════════════
 # FORMAT DISCOVERY (the makefile discovers what to build)
@@ -60,6 +60,9 @@ RULES := $(shell find $(SPECS_DIR) -name "*.rules" 2>/dev/null)
 APIS := $(shell find $(SPECS_DIR) -name "*.api" 2>/dev/null)
 GGOS := $(shell find $(SPECS_DIR) -name "*.ggo" 2>/dev/null)
 UIS := $(shell find $(SPECS_DIR) -name "*.ui" 2>/dev/null)
+CSTS := $(shell find $(SPECS_DIR) -name "*.cst" 2>/dev/null)
+CSPS := $(shell find $(SPECS_DIR) -name "*.csp" 2>/dev/null)
+CSMAPS := $(shell find $(SPECS_DIR) -name "*.csmap" 2>/dev/null)
 
 # Ring 2: Visual models (processed if tools available)
 DRAWIO := $(shell find $(MODEL_DIR) -name "*.drawio" 2>/dev/null)
@@ -84,7 +87,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity
+.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev opensmith-corpus-lock opensmith-corpus opensmith-parity opensmithgen-ape opensmith-frontend-check
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -106,6 +109,8 @@ help:
 	@echo "│  make opensmith-corpus-lock Build deterministic OpenSmith lock      │"
 	@echo "│  make opensmith-corpus      Extract RE fixture corpus               │"
 	@echo "│  make opensmith-parity      Run parity harness scaffold             │"
+	@echo "│  make opensmithgen-ape      Build OpenSmith parser APE tool         │"
+	@echo "│  make opensmith-frontend-check Parse/AST roundtrip corpus check     │"
 	@echo "│  make e9studio     Build live reload tool                           │"
 	@echo "│  make feedback     Ring 0→1→2 feedback loop                         │"
 	@echo "│  make dev          Watch specs, auto-regen on change                │"
@@ -137,6 +142,9 @@ formats:
 	@echo "  .api:     $(words $(APIS)) files"
 	@echo "  .ggo:     $(words $(GGOS)) files"
 	@echo "  .ui:      $(words $(UIS)) files"
+	@echo "  .cst:     $(words $(CSTS)) files"
+	@echo "  .csp:     $(words $(CSPS)) files"
+	@echo "  .csmap:   $(words $(CSMAPS)) files"
 	@echo ""
 	@echo "── Ring 2: Visual Models ─────────────────────────────────────────────"
 	@echo "  .drawio:  $(words $(DRAWIO)) files (StateSmith)"
@@ -155,7 +163,7 @@ formats:
 # Ring 0 Tools (always build these first)
 # ══════════════════════════════════════════════════════════════════════════════
 
-RING0_TOOLS := $(BUILD_DIR)/schemagen $(BUILD_DIR)/lemon $(BUILD_DIR)/defgen $(BUILD_DIR)/smgen $(BUILD_DIR)/lexgen $(BUILD_DIR)/bddgen $(BUILD_DIR)/uigen $(BUILD_DIR)/hsmgen $(BUILD_DIR)/apigen $(BUILD_DIR)/implgen $(BUILD_DIR)/sqlgen $(BUILD_DIR)/msmgen $(BUILD_DIR)/siggen $(BUILD_DIR)/clipsgen
+RING0_TOOLS := $(BUILD_DIR)/schemagen $(BUILD_DIR)/lemon $(BUILD_DIR)/defgen $(BUILD_DIR)/smgen $(BUILD_DIR)/lexgen $(BUILD_DIR)/bddgen $(BUILD_DIR)/uigen $(BUILD_DIR)/hsmgen $(BUILD_DIR)/apigen $(BUILD_DIR)/implgen $(BUILD_DIR)/sqlgen $(BUILD_DIR)/msmgen $(BUILD_DIR)/siggen $(BUILD_DIR)/clipsgen $(BUILD_DIR)/opensmithgen
 
 tools: $(BUILD_DIR) $(RING0_TOOLS)
 	@echo "Ring 0 tools ready"
@@ -204,6 +212,9 @@ $(BUILD_DIR)/siggen: $(TOOLS_DIR)/siggen/siggen.c | $(BUILD_DIR)
 
 $(BUILD_DIR)/clipsgen: $(TOOLS_DIR)/clipsgen/clipsgen.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -I$(TOOLS_DIR)/clipsgen -o $@ $<
+
+$(BUILD_DIR)/opensmithgen: $(TOOLS_DIR)/opensmithgen/opensmithgen.c | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I$(TOOLS_DIR)/opensmithgen -o $@ $<
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Ring 1 Tools (optional velocity tools - portable via cosmocc)
@@ -272,29 +283,71 @@ tsan: clean all
 #
 # ══════════════════════════════════════════════════════════════════════════════
 
-E9STUDIO_DIR := vendors/submodules/e9studio
+E9STUDIO_VENDOR_DIR := vendors/submodules/e9studio
+E9STUDIO_FALLBACK_DIR ?= ../cosmo-e9studio
+E9STUDIO_LEGACY_DIR ?= ../e9studio
+ifeq ($(wildcard $(E9STUDIO_VENDOR_DIR)/Makefile),)
+ifneq ($(wildcard $(E9STUDIO_FALLBACK_DIR)/Makefile),)
+E9STUDIO_DIR := $(E9STUDIO_FALLBACK_DIR)
+else
+E9STUDIO_DIR := $(E9STUDIO_LEGACY_DIR)
+endif
+else
+E9STUDIO_DIR := $(E9STUDIO_VENDOR_DIR)
+endif
 E9PATCH_DIR := $(E9STUDIO_DIR)/src/e9patch
 E9LIVERELOAD_DIR := $(E9STUDIO_DIR)/test/livereload
+E9TOOL_BIN := $(BUILD_DIR)/e9tool
+E9PATCH_BIN := $(BUILD_DIR)/e9patch
+E9LIVERELOAD_SRC := $(E9LIVERELOAD_DIR)/livereload.c
+E9PROCMEM_SRC := $(E9PATCH_DIR)/e9procmem.c
 
 # e9studio livereload tool (uses unified procmem API)
-$(BUILD_DIR)/livereload: $(E9LIVERELOAD_DIR)/livereload.c $(E9PATCH_DIR)/e9procmem.c $(GEN_DIR)/domain/livereload_types.c | $(BUILD_DIR)
+$(BUILD_DIR)/livereload: $(E9LIVERELOAD_SRC) $(E9PROCMEM_SRC) $(GEN_DIR)/domain/livereload_types.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -I$(E9PATCH_DIR) -I$(GEN_DIR)/domain -o $@ $^
 
-e9studio: $(BUILD_DIR)/livereload
-	@echo "e9studio livereload tool built"
-	@echo "  Hot-patch running processes without ptrace"
-	@echo "  Usage: $(BUILD_DIR)/livereload <PID> [source_file]"
+$(E9TOOL_BIN) $(E9PATCH_BIN): | $(BUILD_DIR)
+	@if [ ! -x "$(E9STUDIO_DIR)/e9tool" ] || [ ! -x "$(E9STUDIO_DIR)/e9patch" ]; then \
+		echo "Building resolved e9studio tools from $(E9STUDIO_DIR)"; \
+		$(MAKE) -C "$(E9STUDIO_DIR)" clean >/dev/null 2>&1 || true; \
+		( cd "$(E9STUDIO_DIR)" && ./build.sh ); \
+	fi
+	@cp "$(E9STUDIO_DIR)/e9tool" "$(E9TOOL_BIN)"
+	@cp "$(E9STUDIO_DIR)/e9patch" "$(E9PATCH_BIN)"
+
+e9studio:
+	@if [ -f "$(E9LIVERELOAD_SRC)" ] && [ -f "$(E9PROCMEM_SRC)" ]; then \
+		$(MAKE) "$(BUILD_DIR)/livereload"; \
+		echo "e9studio livereload tool built"; \
+		echo "  Hot-patch running processes without ptrace"; \
+		echo "  Usage: $(BUILD_DIR)/livereload <PID> [source_file]"; \
+	else \
+		$(MAKE) "$(E9TOOL_BIN)" "$(E9PATCH_BIN)"; \
+		echo "e9studio tool bridge built from $(E9STUDIO_DIR)"; \
+		echo "  Using resolved e9tool/e9patch binaries from $(E9STUDIO_DIR)"; \
+		echo "  Usage: $(E9TOOL_BIN) --dump-all -M false -P empty <binary.dbg>"; \
+	fi
 
 livereload: e9studio
-	@echo ""
-	@echo "Live Reload Ready"
-	@echo "────────────────────────────────────────────────────────────────────"
-	@echo "  1. Build and run your app: make run"
-	@echo "  2. In another terminal:    $(BUILD_DIR)/livereload \$$(pgrep app) src/main.c"
-	@echo "  3. Edit src/main.c and save - changes appear instantly!"
-	@echo ""
-	@echo "Note: No sudo needed for processes you own (uses process_vm_writev)"
-	@echo ""
+	@if [ -f "$(E9LIVERELOAD_SRC)" ] && [ -f "$(E9PROCMEM_SRC)" ]; then \
+		echo ""; \
+		echo "Live Reload Ready"; \
+		echo "────────────────────────────────────────────────────────────────────"; \
+		echo "  1. Build and run your app: make run"; \
+		echo "  2. In another terminal:    $(BUILD_DIR)/livereload \$$(pgrep app) src/main.c"; \
+		echo "  3. Edit src/main.c and save - changes appear instantly!"; \
+		echo ""; \
+		echo "Note: No sudo needed for processes you own (uses process_vm_writev)"; \
+		echo ""; \
+	else \
+		echo ""; \
+		echo "Live Reload Harness Missing in $(E9STUDIO_DIR)"; \
+		echo "────────────────────────────────────────────────────────────────────"; \
+		echo "  The resolved e9studio checkout currently provides e9tool/e9patch"; \
+		echo "  the older livereload.c + e9procmem.c harness is not present."; \
+		echo "  Use build/e9tool or downstream watch scripts for rebuild/analyze loops."; \
+		echo ""; \
+	fi
 
 # Feedback loop: Ring 0→1→2 composability with live reload
 feedback:
@@ -344,30 +397,41 @@ verify: tools
 	@./scripts/regen-all.sh --verify
 
 opensmith-corpus-lock:
-	@$(PYTHON) ./scripts/opensmith_corpus.py inventory \
+	@sh ./scripts/opensmith_corpus.sh inventory \
 		--zip "$(OPENSMITH_ZIP)" \
 		--lock "$(OPENSMITH_LOCK)"
 
 opensmith-corpus: opensmith-corpus-lock
-	@$(PYTHON) ./scripts/opensmith_corpus.py extract \
+	@sh ./scripts/opensmith_corpus.sh extract \
 		--zip "$(OPENSMITH_ZIP)" \
 		--lock "$(OPENSMITH_LOCK)" \
 		--out-dir "$(OPENSMITH_CORPUS_DIR)"
 
 opensmith-parity: opensmith-corpus
 	@if [ -n "$(ENGINE)" ]; then \
-		$(PYTHON) ./scripts/opensmith_parity.py \
+		sh ./scripts/opensmith_parity.sh \
 			--inventory "$(OPENSMITH_LOCK)" \
 			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
 			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--engine "$(ENGINE)"; \
 	else \
-		$(PYTHON) ./scripts/opensmith_parity.py \
+		sh ./scripts/opensmith_parity.sh \
 			--inventory "$(OPENSMITH_LOCK)" \
 			--corpus-dir "$(OPENSMITH_CORPUS_DIR)" \
 			--artifacts-dir "$(OPENSMITH_PARITY_DIR)" \
 			--dry-run; \
 	fi
+
+opensmithgen-ape:
+	@mkdir -p "$(BUILD_DIR)"
+	@cosmocc $(CFLAGS) \
+		-o "$(OPENSMITH_FRONTEND_TOOL)" \
+		"$(TOOLS_DIR)/opensmithgen/opensmithgen.c"
+
+opensmith-frontend-check: opensmithgen-ape opensmith-corpus
+	@sh ./scripts/opensmith_frontend_check.sh \
+		--tool "$(OPENSMITH_FRONTEND_TOOL)" \
+		--corpus-dir "$(OPENSMITH_CORPUS_DIR)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Pattern Rules (format → output mapping)

@@ -22,13 +22,14 @@
 
 #include "clipsgen_self.h"
 
-#define CLIPSGEN_VERSION "1.0.0"
+#define CLIPSGEN_VERSION "1.1.0"
 #define MAX_PATH 512
 #define MAX_NAME 64
 #define MAX_LINE 1024
 #define MAX_CONDS 16
 #define MAX_ACTIONS 16
 #define MAX_RULES 64
+#define MAX_FIELDS 64
 
 typedef struct { char expr[MAX_LINE]; } condition_t;
 typedef struct { char stmt[MAX_LINE]; } action_t;
@@ -42,16 +43,110 @@ typedef struct {
     int priority;
 } rule_t;
 
+typedef enum {
+    FIELD_INT = 0,
+    FIELD_DOUBLE = 1,
+    FIELD_STRING = 2
+} field_kind_t;
+
+typedef struct {
+    char name[MAX_NAME];
+    field_kind_t kind;
+} ctx_field_t;
+
 static rule_t rules[MAX_RULES];
 static int rule_count = 0;
+static ctx_field_t ctx_fields[MAX_FIELDS];
+static int ctx_field_count = 0;
 
 static void trim(char *s) {
-    while (*s && isspace((unsigned char)*s)) memmove(s, s+1, strlen(s));
-    char *e = s + strlen(s) - 1;
-    while (e > s && isspace((unsigned char)*e)) *e-- = '\0';
+    char *start = s;
+    size_t len;
+
+    while (*start && isspace((unsigned char)*start)) start++;
+    if (start != s) memmove(s, start, strlen(start) + 1);
+
+    len = strlen(s);
+    while (len > 0 && isspace((unsigned char)s[len - 1])) {
+        s[--len] = '\0';
+    }
 }
 
 static void to_upper(char *s) { for (; *s; s++) *s = toupper((unsigned char)*s); }
+
+static int has_decimal_literal(const char *s) {
+    const char *p = s;
+    while (*p) {
+        if (isdigit((unsigned char)*p)) {
+            while (isdigit((unsigned char)*p)) p++;
+            if (*p == '.' && isdigit((unsigned char)p[1])) return 1;
+        } else {
+            p++;
+        }
+    }
+    return 0;
+}
+
+static field_kind_t infer_field_kind(const char *field_name, const char *expr) {
+    char lower[MAX_NAME];
+    size_t i;
+
+    if (strchr(expr, '"') || strchr(expr, '\'')) return FIELD_STRING;
+    if (has_decimal_literal(expr)) return FIELD_DOUBLE;
+
+    strncpy(lower, field_name, MAX_NAME - 1);
+    lower[MAX_NAME - 1] = '\0';
+    for (i = 0; lower[i]; i++) lower[i] = (char)tolower((unsigned char)lower[i]);
+
+    if (strstr(lower, "total") || strstr(lower, "amount") ||
+        strstr(lower, "price") || strstr(lower, "cost") ||
+        strstr(lower, "discount") || strstr(lower, "rate") ||
+        strstr(lower, "ratio")) {
+        return FIELD_DOUBLE;
+    }
+
+    return FIELD_INT;
+}
+
+static void register_ctx_field(const char *field_name, field_kind_t kind) {
+    int i;
+
+    for (i = 0; i < ctx_field_count; i++) {
+        if (strcmp(ctx_fields[i].name, field_name) == 0) {
+            if (kind > ctx_fields[i].kind) ctx_fields[i].kind = kind;
+            return;
+        }
+    }
+
+    if (ctx_field_count >= MAX_FIELDS) return;
+
+    strncpy(ctx_fields[ctx_field_count].name, field_name, MAX_NAME - 1);
+    ctx_fields[ctx_field_count].name[MAX_NAME - 1] = '\0';
+    ctx_fields[ctx_field_count].kind = kind;
+    ctx_field_count++;
+}
+
+static void collect_ctx_fields(const char *expr) {
+    const char *p = expr;
+
+    while ((p = strstr(p, "ctx->")) != NULL) {
+        char name[MAX_NAME];
+        size_t len = 0;
+        field_kind_t kind;
+
+        p += 5;
+        while ((isalnum((unsigned char)p[len]) || p[len] == '_') && len < MAX_NAME - 1) {
+            name[len] = p[len];
+            len++;
+        }
+        name[len] = '\0';
+        if (len == 0) continue;
+
+        kind = infer_field_kind(name, expr);
+        register_ctx_field(name, kind);
+        p += len;
+    }
+}
 
 static int parse_rules(const char *filename) {
     FILE *f = fopen(filename, "r");
@@ -73,12 +168,25 @@ static int parse_rules(const char *filename) {
             current = &rules[rule_count++];
             memset(current, 0, sizeof(*current));
             strncpy(current->name, n, MAX_NAME - 1);
+            current->name[MAX_NAME - 1] = '\0';
+            in_when = 0;
+            in_then = 0;
             continue;
         }
 
         if (strncmp(line, "when", 4) == 0) { in_when = 1; in_then = 0; continue; }
         if (strncmp(line, "then", 4) == 0) { in_when = 0; in_then = 1; continue; }
-        if (line[0] == '}') { in_when = 0; in_then = 0; current = NULL; continue; }
+        if (strcmp(line, "{") == 0) continue;
+        if (line[0] == '}') {
+            if (in_when) {
+                in_when = 0;
+            } else if (in_then) {
+                in_then = 0;
+            } else {
+                current = NULL;
+            }
+            continue;
+        }
 
         if (current && in_when && line[0] != '{') {
             char *semi = strchr(line, ';');
@@ -86,6 +194,8 @@ static int parse_rules(const char *filename) {
             trim(line);
             if (line[0]) {
                 strncpy(current->conditions[current->cond_count++].expr, line, MAX_LINE - 1);
+                current->conditions[current->cond_count - 1].expr[MAX_LINE - 1] = '\0';
+                collect_ctx_fields(line);
             }
         }
 
@@ -95,6 +205,8 @@ static int parse_rules(const char *filename) {
             trim(line);
             if (line[0]) {
                 strncpy(current->actions[current->action_count++].stmt, line, MAX_LINE - 1);
+                current->actions[current->action_count - 1].stmt[MAX_LINE - 1] = '\0';
+                collect_ctx_fields(line);
             }
         }
     }
@@ -112,6 +224,7 @@ static int generate_rules_h(const char *outdir, const char *prefix) {
 
     char upper[MAX_NAME];
     strncpy(upper, prefix, MAX_NAME - 1);
+    upper[MAX_NAME - 1] = '\0';
     to_upper(upper);
 
     time_t now = time(NULL);
@@ -130,14 +243,25 @@ static int generate_rules_h(const char *outdir, const char *prefix) {
     }
     fprintf(out, "} %s_rule_id_t;\n\n", prefix);
 
-    /* Generate placeholder context struct (can be overridden) */
+    /* Generate inferred context struct (can be overridden) */
     fprintf(out, "/* Context struct - define %s_CTX_DEFINED before including to use your own */\n", upper);
     fprintf(out, "#ifndef %s_CTX_DEFINED\n", upper);
     fprintf(out, "typedef struct %s_ctx {\n", prefix);
-    fprintf(out, "    double order_total;     /* placeholder field */\n");
-    fprintf(out, "    int customer_tier;      /* placeholder field */\n");
-    fprintf(out, "    double discount;        /* placeholder field */\n");
-    fprintf(out, "    double shipping_cost;   /* placeholder field */\n");
+    if (ctx_field_count == 0) {
+        fprintf(out, "    int _unused;\n");
+    } else {
+        for (int i = 0; i < ctx_field_count; i++) {
+            const char *ctype = "int";
+            if (ctx_fields[i].kind == FIELD_DOUBLE) ctype = "double";
+            if (ctx_fields[i].kind == FIELD_STRING) ctype = "char";
+
+            if (ctx_fields[i].kind == FIELD_STRING) {
+                fprintf(out, "    %s %s[128];\n", ctype, ctx_fields[i].name);
+            } else {
+                fprintf(out, "    %s %s;\n", ctype, ctx_fields[i].name);
+            }
+        }
+    }
     fprintf(out, "} %s_ctx_t;\n", prefix);
     fprintf(out, "#else\n");
     fprintf(out, "typedef struct %s_ctx %s_ctx_t;\n", prefix, prefix);
@@ -213,10 +337,14 @@ int main(int argc, char *argv[]) {
     const char *basename = strrchr(input, '/');
     basename = basename ? basename + 1 : input;
     strncpy(prefix, basename, MAX_NAME - 1);
+    prefix[MAX_NAME - 1] = '\0';
     char *dot = strchr(prefix, '.');
     if (dot) *dot = '\0';
 
-    if (argc > 3) strncpy(prefix, argv[3], MAX_NAME - 1);
+    if (argc > 3) {
+        strncpy(prefix, argv[3], MAX_NAME - 1);
+        prefix[MAX_NAME - 1] = '\0';
+    }
 
     if (parse_rules(input) != 0) return 1;
 

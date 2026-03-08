@@ -457,35 +457,43 @@ static int generate_bdd_c(const char *outdir, const char *prefix) {
 
     /* Feature names */
     fprintf(out, "/* Feature data */\n");
+    fprintf(out, "static const char *feature_names[] = {\n");
     for (int fi = 0; fi < feature_count; fi++) {
         feature_t *f = &features[fi];
-        fprintf(out, "static const char *feature_%d_name = \"%s\";\n", fi, f->name);
+        fprintf(out, "    \"%s\",\n", f->name);
     }
-    fprintf(out, "\n");
+    fprintf(out, "};\n");
+    fprintf(out, "static const int generated_feature_count = %d;\n\n", feature_count);
 
     /* Scenario data */
     fprintf(out, "/* Scenario data */\n");
     fprintf(out, "typedef struct {\n");
     fprintf(out, "    const char *name;\n");
+    fprintf(out, "    int background_step_start;\n");
+    fprintf(out, "    int background_step_count;\n");
     fprintf(out, "    int step_start;\n");
     fprintf(out, "    int step_count;\n");
     fprintf(out, "    int feature_index;\n");
     fprintf(out, "} scenario_info_t;\n\n");
 
     fprintf(out, "static const scenario_info_t scenarios[] = {\n");
-    int global_step = 0;
+    int generated_scenario_count = 0;
     for (int fi = 0; fi < feature_count; fi++) {
         feature_t *f = &features[fi];
         for (int si = 0; si < f->scenario_count; si++) {
             scenario_t *s = &f->scenarios[si];
-            fprintf(out, "    {\"%s\", %d, %d, %d},\n",
-                    s->name, global_step, s->step_count, fi);
-            global_step += s->step_count;
+            fprintf(out, "    {\"%s\", %d, %d, %d, %d, %d},\n",
+                    s->name,
+                    f->background_step_start,
+                    f->background_step_count,
+                    s->step_start,
+                    s->step_count,
+                    fi);
+            generated_scenario_count++;
         }
     }
     fprintf(out, "};\n");
-    fprintf(out, "static const int scenario_count = %d;\n\n", 
-            feature_count > 0 ? features[0].scenario_count : 0);
+    fprintf(out, "static const int scenario_count = %d;\n\n", generated_scenario_count);
 
     /* Step data */
     fprintf(out, "/* Step data */\n");
@@ -520,13 +528,36 @@ static int generate_bdd_c(const char *outdir, const char *prefix) {
     fprintf(out, "    if (scenario_index < 0 || scenario_index >= scenario_count) return;\n\n");
     fprintf(out, "    const scenario_info_t *sc = &scenarios[scenario_index];\n");
     fprintf(out, "    const char *feature_name = \"\";\n");
-    fprintf(out, "    if (sc->feature_index == 0) feature_name = feature_0_name;\n\n");
+    fprintf(out, "    if (sc->feature_index >= 0 && sc->feature_index < generated_feature_count)\n");
+    fprintf(out, "        feature_name = feature_names[sc->feature_index];\n\n");
     fprintf(out, "    printf(\"  Scenario: %%s\\n\", sc->name);\n\n");
     fprintf(out, "    %s_context_t ctx;\n", prefix);
     fprintf(out, "    ctx.world = world;\n");
     fprintf(out, "    ctx.scenario = sc->name;\n");
     fprintf(out, "    ctx.feature = feature_name;\n\n");
     fprintf(out, "    int scenario_passed = 1;\n");
+    fprintf(out, "    for (int i = 0; i < sc->background_step_count; i++) {\n");
+    fprintf(out, "        int step_idx = sc->background_step_start + i;\n");
+    fprintf(out, "        if (step_idx < 0 || step_idx >= total_steps) break;\n\n");
+    fprintf(out, "        const step_info_t *st = &steps[step_idx];\n");
+    fprintf(out, "        ctx.step_text = st->text;\n");
+    fprintf(out, "        ctx.step_line = st->line_number;\n\n");
+    fprintf(out, "        const char *keyword = (st->keyword == 0) ? \"Given\" :\n");
+    fprintf(out, "                              (st->keyword == 1) ? \"When\" : \"Then\";\n");
+    fprintf(out, "        printf(\"    %%s %%s... \", keyword, st->text);\n\n");
+    fprintf(out, "        %s_result_t result = %s_PENDING;\n", prefix, prefix);
+    fprintf(out, "        if (st->function) {\n");
+    fprintf(out, "            result = st->function(&ctx);\n");
+    fprintf(out, "        }\n\n");
+    fprintf(out, "        printf(\"%%s\\n\", result_names[result]);\n");
+    fprintf(out, "        stats->total_steps++;\n\n");
+    fprintf(out, "        if (result == %s_PASS) {\n", prefix);
+    fprintf(out, "            stats->passed_steps++;\n");
+    fprintf(out, "        } else {\n");
+    fprintf(out, "            stats->failed_steps++;\n");
+    fprintf(out, "            scenario_passed = 0;\n");
+    fprintf(out, "        }\n");
+    fprintf(out, "    }\n\n");
     fprintf(out, "    for (int i = 0; i < sc->step_count; i++) {\n");
     fprintf(out, "        int step_idx = sc->step_start + i;\n");
     fprintf(out, "        if (step_idx >= total_steps) break;\n\n");
@@ -560,10 +591,14 @@ static int generate_bdd_c(const char *outdir, const char *prefix) {
     /* Run all scenarios */
     fprintf(out, "void %s_run_all(void *world, %s_stats_t *stats) {\n", prefix, prefix);
     fprintf(out, "    memset(stats, 0, sizeof(*stats));\n\n");
-    for (int fi = 0; fi < feature_count; fi++) {
-        fprintf(out, "    printf(\"Feature: %%s\\n\\n\", feature_%d_name);\n", fi);
-    }
-    fprintf(out, "\n    for (int i = 0; i < scenario_count; i++) {\n");
+    fprintf(out, "    int last_feature_index = -1;\n");
+    fprintf(out, "    for (int i = 0; i < scenario_count; i++) {\n");
+    fprintf(out, "        const scenario_info_t *sc = &scenarios[i];\n");
+    fprintf(out, "        if (sc->feature_index != last_feature_index) {\n");
+    fprintf(out, "            if (i > 0) printf(\"\\n\");\n");
+    fprintf(out, "            printf(\"Feature: %%s\\n\\n\", feature_names[sc->feature_index]);\n");
+    fprintf(out, "            last_feature_index = sc->feature_index;\n");
+    fprintf(out, "        }\n");
     fprintf(out, "        %s_run_scenario(world, i, stats);\n", prefix);
     fprintf(out, "        printf(\"\\n\");\n");
     fprintf(out, "    }\n");
