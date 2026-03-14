@@ -151,6 +151,31 @@ The "Lemon bindings" pattern: lexgen + Lemon compose to parse ANY DSL → genera
 
 ---
 
+### angr
+**Binary analysis framework for CFG recovery, indirect jump resolution, and VEX IR lifting.**
+
+| Concept | Why it matters here |
+|---------|---------------------|
+| CFG recovery | Useful reference point for e9studio-style binary analysis and patch planning |
+| VEX IR lifting | Normalizes machine instructions before control-flow analysis |
+| `transition_graph` per function | Mirrors the per-function graph view used by many binary analysis pipelines |
+| Indirect jump resolution | Critical for recovering call edges and dispatcher-heavy binaries |
+
+**URL:** https://github.com/angr/angr
+
+**Use as reference:** angr is not part of Ring 0/1/2 build requirements, but it is a useful comparison point when reasoning about CFG extraction from APE, PE, or ELF binaries.
+
+---
+
+### Topology-aware hashing (TAH)
+**CFG similarity reference for malware detection and fast graph matching.**
+
+TAH is relevant when comparing recovered control-flow graphs at scale: it turns CFG topology into high-dimensional signatures so near-matches can be found quickly without doing full graph isomorphism checks on every candidate.
+
+**Use as reference:** Treat TAH as analysis literature for future binary-analysis and function-similarity work rather than as a required repository dependency.
+
+---
+
 ## Tool Compatibility Quick Reference
 
 | Tool | Status | Notes |
