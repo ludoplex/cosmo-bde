@@ -1,0 +1,120 @@
+# tah.schema
+# Topology-Aware Hashing (TAH) — CFG Similarity for Binary and Agentic Contexts
+#
+# TAH converts a CFG's structural topology into a fixed-length high-dimensional
+# signature vector.  Near-identical topologies produce close signatures, enabling
+# fast similarity searches without full graph-isomorphism checks.
+#
+# Original use: malware detection and binary clone search.
+# Extended use: comparing agentic workflows, detecting repeated LLM reasoning
+#               patterns, versioning human decision trees, and identifying
+#               structurally equivalent agent orchestrations across frameworks.
+#
+# Similarity interpretation:
+#   100 = structurally identical topology
+#   70-99 = highly similar (minor modifications)
+#   40-69 = partially similar (same pattern family)
+#   0-39  = structurally different
+#
+# match_type encoding (TahComparison):
+#   0 = exact      — identical topology hash
+#   1 = similar    — similarity_score >= 70
+#   2 = partial    — similarity_score 40-69
+#   3 = different  — similarity_score < 40
+#
+# @version 1.0.0
+# @generator schemagen
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAH Signature (per function / per agent)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type TahSignature {
+    function_name:  string[128]    # Originating function or agent name
+    source_type:    u8             # CFG_SOURCE_* (binary/human/llm/agentic)
+    node_count:     u32            # Nodes in the source CFG
+    edge_count:     u32            # Edges in the source CFG
+    entry_degree:   u32            # Out-degree of entry node
+    exit_degree:    u32            # In-degree of exit node(s)
+    max_depth:      u32            # Longest path from entry to any exit
+    back_edge_count: u32           # Number of back-edges (loops / recursion)
+    call_count:     u32            # Number of call / sub-agent edges
+
+    # 32-dimensional topology hash vector (Weisfeiler-Lehman or structural WL hash)
+    dim:            u32            # Number of active dimensions (1-32)
+    h0:             u64
+    h1:             u64
+    h2:             u64
+    h3:             u64
+    h4:             u64
+    h5:             u64
+    h6:             u64
+    h7:             u64
+    h8:             u64
+    h9:             u64
+    h10:            u64
+    h11:            u64
+    h12:            u64
+    h13:            u64
+    h14:            u64
+    h15:            u64
+
+    module_name:    string[128]    # Module / file / framework name
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAH Comparison Result
+# ══════════════════════════════════════════════════════════════════════════════
+
+type TahComparison {
+    sig_a_name:         string[128]   # Name of first signature
+    sig_b_name:         string[128]   # Name of second signature
+    sig_a_source:       u8            # Source type of A
+    sig_b_source:       u8            # Source type of B
+    similarity_score:   u32           # 0-100 (100 = identical topology)
+    match_type:         u8            # 0=exact 1=similar 2=partial 3=different
+    node_count_delta:   i32           # |nodes_a - nodes_b|
+    edge_count_delta:   i32           # |edges_a - edges_b|
+    depth_delta:        i32           # |max_depth_a - max_depth_b|
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAH Index (searchable corpus of signatures)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type TahIndex {
+    name:           string[128]    # Index name (e.g. "malware_corpus", "agent_library")
+    capacity:       u32            # Maximum signatures
+    size:           u32            # Current signature count
+    source_type:    u8             # Dominant source type (or 255 = mixed)
+    search_threshold: u32          # Minimum similarity_score to report a match (0-100)
+    last_updated:   u64            # Unix timestamp of last modification
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# TAH Search Result
+# ══════════════════════════════════════════════════════════════════════════════
+
+type TahSearchResult {
+    query_name:     string[128]    # Function / agent that was queried
+    match_name:     string[128]    # Best-matching function / agent in index
+    match_source:   u8             # Source type of match
+    similarity:     u32            # 0-100
+    rank:           u32            # Rank in result list (1 = best)
+    index_name:     string[128]    # Which index produced this result
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Constants
+# ══════════════════════════════════════════════════════════════════════════════
+
+const TAH_MATCH_EXACT     = 0
+const TAH_MATCH_SIMILAR   = 1
+const TAH_MATCH_PARTIAL   = 2
+const TAH_MATCH_DIFFERENT = 3
+
+const TAH_THRESHOLD_EXACT   = 100
+const TAH_THRESHOLD_SIMILAR = 70
+const TAH_THRESHOLD_PARTIAL = 40
+
+const TAH_MAX_DIMS = 16

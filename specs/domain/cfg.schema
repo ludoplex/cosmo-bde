@@ -1,0 +1,135 @@
+# cfg.schema
+# Control Flow Graph — Unified Types for Binary and Agentic Analysis
+#
+# A CFG captures the possible execution paths through a unit of behaviour.
+# In binary analysis that unit is a machine-code function; in agentic engineering
+# it is an agent, a human workflow step, or an LLM reasoning chain.
+#
+# source_type encoding:
+#   0 = binary      (lifted from machine code, e.g. via angr/VEX IR)
+#   1 = human       (human workflow or decision tree)
+#   2 = llm_agent   (LLM chain-of-thought or tool-use graph)
+#   3 = agentic     (multi-agent orchestration / Agentic Engineering)
+#
+# node_type encoding (CfgNode):
+#   0 = normal      (sequential block)
+#   1 = entry       (function / workflow entry)
+#   2 = exit        (function return / terminal state)
+#   3 = call        (call to another function / sub-agent / tool)
+#   4 = indirect    (indirect jump / dynamic dispatch)
+#   5 = condition   (branch with guard condition)
+#   6 = merge       (join point after branch)
+#   7 = loop_head   (back-edge target / loop entry)
+#
+# edge_type encoding (CfgEdge):
+#   0 = direct      (unconditional branch / sequential flow)
+#   1 = true_branch  (conditional — condition holds)
+#   2 = false_branch (conditional — condition does not hold)
+#   3 = call_edge   (intra-graph call / sub-agent invocation)
+#   4 = return_edge (return from call)
+#   5 = indirect    (resolved indirect jump / dynamic dispatch)
+#   6 = exception   (exception / error path)
+#
+# @version 1.0.0
+# @generator schemagen
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CFG Node
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CfgNode {
+    id:           u32              # Unique node ID within graph
+    label:        string[128]      # Human-readable label (function+offset, step name, …)
+    address:      u64              # Binary address (0 if non-binary source)
+    node_type:    u8               # Node kind (see header comments)
+    source_type:  u8               # Origin domain (binary / human / llm_agent / agentic)
+    ins_count:    u32              # Instruction / step count in this block
+    ir_block_id:  u32              # Corresponding AgentIrBlock id (0 = none)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CFG Edge
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CfgEdge {
+    id:           u32              # Unique edge ID within graph
+    from_node_id: u32              # Source node
+    to_node_id:   u32              # Destination node
+    edge_type:    u8               # Edge kind (see header comments)
+    guard:        string[256]      # Guard condition expression (empty = unconditional)
+    probability:  u32              # Estimated branch probability 0-100
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CFG Function (per-function transition graph)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CfgFunction {
+    name:           string[128]    # Function / agent / workflow name
+    source_type:    u8             # Origin domain
+    entry_node_id:  u32            # Entry CfgNode id
+    node_count:     u32            # Total nodes
+    edge_count:     u32            # Total edges
+    has_indirect:   i32            # Contains unresolved indirect edges
+    has_recursion:  i32            # Contains back-edges (loops / recursion)
+    call_count:     u32            # Number of outgoing call edges
+    address:        u64            # Binary entry address (0 if non-binary)
+    module_name:    string[128]    # Module / file / agent framework name
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CFG Graph (whole-program / multi-agent graph)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CfgGraph {
+    name:            string[128]   # Binary, workflow, or system name
+    source_type:     u8            # Dominant origin domain
+    function_count:  u32           # Number of CfgFunction entries
+    node_count:      u32           # Total CfgNodes across all functions
+    edge_count:      u32           # Total CfgEdges across all functions
+    root_function_id: u32          # Entry-point function
+    analysis_time_us: u64          # Microseconds taken to build graph
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# CFG Analysis Result
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CfgAnalysisResult {
+    graph_name:      string[128]   # Which graph this result belongs to
+    status:          i32           # 0=ok, 1=partial, 2=failed
+    error_msg:       string[256]   # Error detail if status != 0
+    unreachable_nodes: u32         # Count of unreachable nodes
+    unresolved_edges:  u32         # Count of unresolved indirect edges
+    cyclomatic_complexity: u32     # McCabe cyclomatic complexity (M = E - N + 2P)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Constants
+# ══════════════════════════════════════════════════════════════════════════════
+
+const CFG_SOURCE_BINARY   = 0
+const CFG_SOURCE_HUMAN    = 1
+const CFG_SOURCE_LLM      = 2
+const CFG_SOURCE_AGENTIC  = 3
+
+const CFG_NODE_NORMAL     = 0
+const CFG_NODE_ENTRY      = 1
+const CFG_NODE_EXIT       = 2
+const CFG_NODE_CALL       = 3
+const CFG_NODE_INDIRECT   = 4
+const CFG_NODE_CONDITION  = 5
+const CFG_NODE_MERGE      = 6
+const CFG_NODE_LOOP_HEAD  = 7
+
+const CFG_EDGE_DIRECT     = 0
+const CFG_EDGE_TRUE       = 1
+const CFG_EDGE_FALSE      = 2
+const CFG_EDGE_CALL       = 3
+const CFG_EDGE_RETURN     = 4
+const CFG_EDGE_INDIRECT   = 5
+const CFG_EDGE_EXCEPTION  = 6
+
+const CFG_STATUS_OK       = 0
+const CFG_STATUS_PARTIAL  = 1
+const CFG_STATUS_FAILED   = 2
