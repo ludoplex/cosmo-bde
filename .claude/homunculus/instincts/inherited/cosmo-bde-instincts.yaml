@@ -1,0 +1,668 @@
+# Instincts generated from https://github.com/ludoplex/cosmo-bde
+# Generated: 2026-04-02T22:21:28.827Z
+# Version: 2.0
+# NOTE: This file supplements (does not replace) any existing curated instincts.
+# High-confidence manually curated instincts should be preserved alongside these.
+
+---
+id: cosmo-bde-commit-conventional
+trigger: "when writing a commit message"
+confidence: 0.85
+domain: git
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Commit Conventional
+
+## Action
+
+Use conventional commit format with prefixes: chore, feat, fix, docs, refactor
+
+## Evidence
+
+- 85 commits analyzed
+- Detected conventional commit pattern
+- Examples: chore: plan full TAH/CFG/AgentIR + consistency enforcement implementation, docs: restore angr and TAH reference presence
+
+---
+id: cosmo-bde-commit-length
+trigger: "when writing a commit message"
+confidence: 0.6
+domain: git
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Commit Length
+
+## Action
+
+Write moderate-length commit messages (~52 characters)
+
+## Evidence
+
+- Average commit message length: 52 chars
+- Based on 85 commits
+
+---
+id: cosmo-bde-naming-files
+trigger: "when creating a new file"
+confidence: 0.8
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Naming Files
+
+## Action
+
+Use snake_case naming convention
+
+## Evidence
+
+- Analyzed file naming patterns in repository
+- Dominant pattern: snake_case
+
+---
+id: cosmo-bde-import-relative
+trigger: "when importing modules"
+confidence: 0.75
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Import Relative
+
+## Action
+
+Use relative imports for project files
+
+## Evidence
+
+- Import analysis shows relative import pattern
+- Example: import { x } from '../lib/x'
+
+---
+id: cosmo-bde-export-style
+trigger: "when exporting from a module"
+confidence: 0.7
+domain: code-style
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Export Style
+
+## Action
+
+Prefer named exports
+
+## Evidence
+
+- Export pattern analysis
+- Dominant style: named
+
+---
+id: cosmo-bde-test-separate
+trigger: "when writing tests"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Test Separate
+
+## Action
+
+Place tests in the tests/ or __tests__/ directory, mirroring src structure
+
+## Evidence
+
+- Separate test directory pattern detected
+- Tests live in dedicated test folders
+
+---
+id: cosmo-bde-workflow-database-migration
+trigger: "when modifying the database schema or adding tables"
+confidence: 0.7
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Database Migration
+
+## Action
+
+Follow the database-migration workflow:
+1. Create migration file
+2. Update schema definitions
+3. Generate/update types
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~4x per month
+- Files: **/schema.*
+
+---
+id: cosmo-bde-workflow-feature-development
+trigger: "when implementing a new feature"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Feature Development
+
+## Action
+
+Follow the feature-development workflow:
+1. Add feature implementation
+2. Add tests for feature
+3. Update documentation
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~11x per month
+- Files: **/*.test.*, **/api/**
+
+---
+id: cosmo-bde-workflow-refactoring
+trigger: "when refactoring code"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Refactoring
+
+## Action
+
+Follow the refactoring workflow:
+1. Ensure tests pass before refactor
+2. Refactor code structure
+3. Verify tests still pass
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: src/**/*
+
+---
+id: cosmo-bde-workflow-add-new-domain-schema-and-generate-types
+trigger: "when doing add new domain schema and generate types"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Add New Domain Schema And Generate Types
+
+## Action
+
+Follow the add-new-domain-schema-and-generate-types workflow:
+1. Create or update specs/domain/*.schema
+2. Run code generators to produce gen/domain/*_{types,json,sql,proto,fbs}* files
+3. Commit both the new/updated schema and all generated files
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: specs/domain/*.schema, gen/domain/*_types.c, gen/domain/*_types.h
+
+---
+id: cosmo-bde-workflow-implement-new-generator-tool
+trigger: "when doing implement new generator tool"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Implement New Generator Tool
+
+## Action
+
+Follow the implement-new-generator-tool workflow:
+1. Add tool source: tools/{genname}/{genname}.c
+2. Add supporting files: tools/{genname}/{genname}_self.h, {genname}_tokens.def
+3. Add example spec in specs/{domain|behavior|interface|platform}/*.ext
+4. Run generator to produce gen/{domain|behavior|api|platform}/* files
+5. Update Makefile and/or scripts as needed
+6. Commit all new/modified files
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: tools/*gen/*gen.c, tools/*gen/*gen_self.h, tools/*gen/*gen_tokens.def
+
+---
+id: cosmo-bde-workflow-regenerate-all-generated-files
+trigger: "when doing regenerate all generated files"
+confidence: 0.65
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Regenerate All Generated Files
+
+## Action
+
+Follow the regenerate-all-generated-files workflow:
+1. Run scripts/regen-all.sh or equivalent
+2. Update gen/*/GENERATOR_VERSION, gen/REGEN_TIMESTAMP
+3. Update all affected generated files in gen/
+4. Commit all regenerated files
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~3x per month
+- Files: scripts/regen-all.sh, gen/*/GENERATOR_VERSION, gen/REGEN_TIMESTAMP
+
+---
+id: cosmo-bde-workflow-update-or-add-vendor-submodule
+trigger: "when doing update or add vendor submodule"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Update Or Add Vendor Submodule
+
+## Action
+
+Follow the update-or-add-vendor-submodule workflow:
+1. Add or update entry in .gitmodules
+2. Add or update vendors/submodules/{submodule}
+3. Update related documentation (VENDORS.md, TOOLING.md, etc.) if needed
+4. Commit all changes
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: .gitmodules, vendors/submodules/*, VENDORS.md
+
+---
+id: cosmo-bde-workflow-ci-workflow-update
+trigger: "when doing ci workflow update"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Ci Workflow Update
+
+## Action
+
+Follow the ci-workflow-update workflow:
+1. Edit .github/workflows/*.yml or .github/actions/*
+2. Edit scripts/test.sh, scripts/verify.sh, or related scripts
+3. Commit changes
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: .github/workflows/*.yml, .github/actions/*, scripts/test.sh
+
+---
+id: cosmo-bde-workflow-docs-update-with-generated-file-drift
+trigger: "when doing docs update with generated file drift"
+confidence: 0.6
+domain: workflow
+source: repo-analysis
+source_repo: https://github.com/ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Workflow Docs Update With Generated File Drift
+
+## Action
+
+Follow the docs-update-with-generated-file-drift workflow:
+1. Edit documentation files (README.md, .claude/CLAUDE.md, VENDORS.md, etc)
+2. Update gen/*/GENERATOR_VERSION as needed
+3. Commit all changes
+
+## Evidence
+
+- Workflow detected from commit patterns
+- Frequency: ~2x per month
+- Files: README.md, .claude/CLAUDE.md, VENDORS.md
+
+---
+id: cosmo-bde-instinct-file-naming
+trigger: "When creating a new file"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct File Naming
+
+## Action
+
+Name the file using snake_case
+
+## Evidence
+
+- Pattern: files use snake_case naming convention
+- CodeStyle: 'files': 'snake_case'
+
+---
+id: cosmo-bde-instinct-function-naming
+trigger: "When defining a new function"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Function Naming
+
+## Action
+
+Name the function using camelCase
+
+## Evidence
+
+- Pattern: functions use camelCase
+- CodeStyle: 'functions': 'camelCase'
+
+---
+id: cosmo-bde-instinct-class-naming
+trigger: "When defining a new class"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Class Naming
+
+## Action
+
+Name the class using PascalCase
+
+## Evidence
+
+- Pattern: classes use PascalCase
+- CodeStyle: 'classes': 'PascalCase'
+
+---
+id: cosmo-bde-instinct-constant-naming
+trigger: "When declaring a constant"
+confidence: 0.9
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Constant Naming
+
+## Action
+
+Name the constant using SCREAMING_SNAKE_CASE
+
+## Evidence
+
+- Pattern: constants use SCREAMING_SNAKE_CASE
+- CodeStyle: 'constants': 'SCREAMING_SNAKE_CASE'
+
+---
+id: cosmo-bde-instinct-relative-imports
+trigger: "When importing modules"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Relative Imports
+
+## Action
+
+Use relative import paths
+
+## Evidence
+
+- CodeStyle: 'importStyle': 'relative'
+- Pattern: imports in codebase are relative
+
+---
+id: cosmo-bde-instinct-named-exports
+trigger: "When exporting modules or functions"
+confidence: 0.85
+domain: code-style
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Named Exports
+
+## Action
+
+Use named exports
+
+## Evidence
+
+- CodeStyle: 'exportStyle': 'named'
+- Pattern: named exports in codebase
+
+---
+id: cosmo-bde-instinct-test-location
+trigger: "When adding tests for new or existing code"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Test Location
+
+## Action
+
+Place tests in a separate test directory
+
+## Evidence
+
+- Architecture: 'testLocation': 'separate'
+- Pattern: test files are outside src/
+
+---
+id: cosmo-bde-instinct-test-naming
+trigger: "When naming test files"
+confidence: 0.8
+domain: testing
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Test Naming
+
+## Action
+
+Use the pattern *.test.* for test file names
+
+## Evidence
+
+- Workflow: 'feature-development' filesInvolved: '**/*.test.*'
+- Pattern: test files named with .test.
+
+---
+id: cosmo-bde-instinct-conventional-commits
+trigger: "When writing a commit message"
+confidence: 0.9
+domain: git
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Conventional Commits
+
+## Action
+
+Use Conventional Commits format with prefixes chore, feat, fix, docs, refactor
+
+## Evidence
+
+- Pattern: commits use prefixes (chore, feat, fix, docs, refactor)
+- Examples: 'chore: plan...', 'feat: implement...', 'fix(generators): resolve...'
+
+---
+id: cosmo-bde-instinct-commit-length
+trigger: "When writing a commit message"
+confidence: 0.8
+domain: git
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Commit Length
+
+## Action
+
+Keep the commit message concise, around 50 characters
+
+## Evidence
+
+- Pattern: average commit message length is 52
+- Examples: 'fix(generators): resolve 6 generated code compilation issues'
+
+---
+id: cosmo-bde-instinct-add-domain-schema
+trigger: "When introducing a new data model or protocol type"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Add Domain Schema
+
+## Action
+
+Create or update specs/domain/*.schema, run code generators to produce gen/domain/*_{types,json,sql,proto,fbs}* files, and commit both the schema and generated files
+
+## Evidence
+
+- Workflow: add-new-domain-schema-and-generate-types
+- Example commits and files: 'Create or update specs/domain/*.schema', 'Run code generators...', 'Commit both the new/updated schema and all generated files'
+
+---
+id: cosmo-bde-instinct-implement-generator-tool
+trigger: "When automating code generation for a new spec format or workflow"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Implement Generator Tool
+
+## Action
+
+Add tool source and supporting files in tools/, add an example spec in specs/, generate outputs in gen/, update Makefile/scripts, and commit all changes
+
+## Evidence
+
+- Workflow: implement-new-generator-tool
+- Example commits and files: 'Add tool source: tools/{genname}/{genname}.c', 'Add example spec in specs/...', 'Run generator to produce gen/...'
+
+---
+id: cosmo-bde-instinct-regen-all
+trigger: "When a generator, schema, or spec changes and outputs need updating"
+confidence: 0.95
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Regen All
+
+## Action
+
+Run scripts/regen-all.sh, update gen/*/GENERATOR_VERSION and gen/REGEN_TIMESTAMP, update all affected generated files, and commit all changes
+
+## Evidence
+
+- Workflow: regenerate-all-generated-files
+- Example commits and files: 'Run scripts/regen-all.sh', 'Update gen/*/GENERATOR_VERSION', 'Commit all regenerated files'
+
+---
+id: cosmo-bde-instinct-update-vendor-submodule
+trigger: "When adding or updating an external dependency or submodule"
+confidence: 0.9
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Update Vendor Submodule
+
+## Action
+
+Add or update .gitmodules and vendors/submodules/{submodule}, update documentation as needed, and commit all changes
+
+## Evidence
+
+- Workflow: update-or-add-vendor-submodule
+- Example commits and files: '.gitmodules', 'vendors/submodules/*', 'VENDORS.md'
+
+---
+id: cosmo-bde-instinct-update-ci-workflow
+trigger: "When improving or fixing CI/CD behavior"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Update Ci Workflow
+
+## Action
+
+Edit .github/workflows/*.yml or .github/actions/*, edit scripts/test.sh or scripts/verify.sh, and commit changes
+
+## Evidence
+
+- Workflow: ci-workflow-update
+- Example commits and files: '.github/workflows/*.yml', 'scripts/test.sh', 'scripts/verify.sh'
+
+---
+id: cosmo-bde-instinct-docs-update-with-generated-drift
+trigger: "When updating documentation and generated file metadata together"
+confidence: 0.85
+domain: workflow
+source: repo-analysis
+source_repo: ludoplex/cosmo-bde
+---
+
+# Cosmo Bde Instinct Docs Update With Generated Drift
+
+## Action
+
+Edit documentation files (README.md, .claude/CLAUDE.md, VENDORS.md, etc), update gen/*/GENERATOR_VERSION as needed, and commit all changes
+
+## Evidence
+
+- Workflow: docs-update-with-generated-file-drift
+- Example commits and files: 'README.md', '.claude/CLAUDE.md', 'gen/*/GENERATOR_VERSION'
+
