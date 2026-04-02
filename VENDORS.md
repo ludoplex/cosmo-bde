@@ -154,25 +154,48 @@ The "Lemon bindings" pattern: lexgen + Lemon compose to parse ANY DSL → genera
 ### angr
 **Binary analysis framework for CFG recovery, indirect jump resolution, and VEX IR lifting.**
 
-| Concept | Why it matters here |
-|---------|---------------------|
-| CFG recovery | Useful reference point for e9studio-style binary analysis and patch planning |
-| VEX IR lifting | Normalizes machine instructions before control-flow analysis |
-| `transition_graph` per function | Mirrors the per-function graph view used by many binary analysis pipelines |
-| Indirect jump resolution | Critical for recovering call edges and dispatcher-heavy binaries |
+| Concept | Binary analysis role | Agentic engineering role |
+|---------|---------------------|--------------------------|
+| CFG recovery | Recover control-flow from machine code | Build `CfgFunction` from agent/human/LLM workflows |
+| VEX IR lifting | Normalize x86/ARM to common IR | Lift framework-specific agent actions to `AgentIrOp` |
+| `transition_graph` per function | Per-function CFG used for analysis | Per-agent transition graph for TAH and consistency checks |
+| Indirect jump resolution | Recover call edges in dispatcher-heavy code | Resolve dynamic tool dispatch in agent chains |
 
 **URL:** https://github.com/angr/angr
 
-**Use as reference:** angr is not part of Ring 0/1/2 build requirements, but it is a useful comparison point when reasoning about CFG extraction from APE, PE, or ELF binaries.
+**cosmo-bde integration:** These concepts are now first-class spec-driven artifacts:
+- `specs/domain/cfg.schema` — `CfgNode`, `CfgEdge`, `CfgFunction`, `CfgGraph`
+- `specs/domain/agent_ir.schema` — `AgentIrOp` / `AgentIrBlock` (Agent IR ≈ VEX IR for agents)
+- `specs/behavior/agent_graph.hsm` — agent lifecycle as a transition graph
+
+See [`docs/AGENTIC_GRAPHS.md`](docs/AGENTIC_GRAPHS.md) for the full mapping.
 
 ---
 
 ### Topology-aware hashing (TAH)
-**CFG similarity reference for malware detection and fast graph matching.**
+**CFG similarity for malware detection, agent-pattern deduplication, and codegen consistency enforcement.**
 
-TAH is relevant when comparing recovered control-flow graphs at scale: it turns CFG topology into high-dimensional signatures so near-matches can be found quickly without doing full graph isomorphism checks on every candidate.
+TAH turns a CFG's structural topology into a fixed-length high-dimensional signature vector.
+Near-identical topologies produce close signatures, enabling O(1) approximate nearest-neighbour
+lookup without full graph-isomorphism checks.
 
-**Use as reference:** Treat TAH as analysis literature for future binary-analysis and function-similarity work rather than as a required repository dependency.
+**cosmo-bde applications:**
+
+| Application | Description |
+|-------------|-------------|
+| Binary clone detection | Compare recovered CFGs across binaries (original use) |
+| Agent-pattern deduplication | Find structurally equivalent workflows across LLM frameworks |
+| State-machine versioning | Detect topology drift between HSM revisions |
+| **Consistency enforcement** | Gate generated code: TAH similarity must exceed contract threshold |
+
+**cosmo-bde integration:**
+- `specs/domain/tah.schema` — `TahSignature`, `TahComparison`, `TahIndex`, `TahSearchResult`
+- `specs/domain/consistency.schema` — `ConsistencyContract` binds each spec file to a reference TAH
+- `specs/behavior/codegen_consistency.hsm` — enforcement pipeline FSM
+- `specs/testing/cfg_tah.feature` — BDD scenarios covering TAH computation and cross-source comparison
+- `specs/testing/consistency.feature` — BDD scenarios for deterministic / LLM / tandem enforcement gates
+
+See [`docs/AGENTIC_GRAPHS.md`](docs/AGENTIC_GRAPHS.md) for details.
 
 ---
 
