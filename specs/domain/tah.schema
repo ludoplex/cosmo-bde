@@ -40,7 +40,7 @@ type TahSignature {
     back_edge_count: u32           # Number of back-edges (loops / recursion)
     call_count:     u32            # Number of call / sub-agent edges
 
-    # 32-dimensional topology hash vector (Weisfeiler-Lehman or structural WL hash)
+    # 16-dimensional topology hash vector (Weisfeiler-Lehman or structural WL hash)
     dim:            u32            # Number of active dimensions (1-32)
     h0:             u64
     h1:             u64
@@ -117,4 +117,4 @@ const TAH_THRESHOLD_EXACT   = 100
 const TAH_THRESHOLD_SIMILAR = 70
 const TAH_THRESHOLD_PARTIAL = 40
 
-const TAH_MAX_DIMS = 16
+const TAH_DIMS = 16     # Number of hash dimensions in TahSignature (h0..h15)

@@ -23,6 +23,8 @@ Feature: CFG, Topology-Aware Hashing, and Agent IR Analysis
     When the CFG is built with indirect-jump resolution enabled
     Then the indirect-jump node should have node_type CFG_NODE_INDIRECT
     And the resolved targets should produce CFG_EDGE_INDIRECT edges
+    # has_indirect tracks UNRESOLVED indirect edges (per cfg.schema).
+    # Successful resolution leaves zero unresolved indirect edges.
     And has_indirect on the CfgFunction should be 0
 
   Scenario: Detect loop in binary CFG
