@@ -1,0 +1,4 @@
+# Build-critical text must be LF so make and sh work on Linux CI regardless of author OS
+Makefile text eol=lf
+*.mk text eol=lf
+*.sh text eol=lf
