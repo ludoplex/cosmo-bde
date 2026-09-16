@@ -1,0 +1,183 @@
+# codegen_consistency.hsm
+# Code-Generation Consistency Enforcement — Lifecycle State Machine
+#
+# Models the enforcement pipeline that runs every time code is generated
+# (deterministically, by an LLM, or both in tandem).
+#
+# Mapping to CFG / Agent-IR concepts:
+#   Each state          ↔  CfgNode
+#   Each `on` clause    ↔  CfgEdge
+#   Initial (Idle)      ↔  CFG_NODE_ENTRY
+#   Done / Blocked      ↔  CFG_NODE_EXIT
+#   Comparing states    ↔  CFG_NODE_CONDITION (branch on pass/fail)
+#   Retry loop head     ↔  CFG_NODE_LOOP_HEAD
+#
+# Agent-IR step annotations (origin in parentheses):
+#   entry actions with "consistency_*"  ↔  AIR_OP_STEP
+#   TAH compare calls                   ↔  AIR_OP_CALL (origin=AIR_ORIGIN_TOOL)
+#   report emission                     ↔  AIR_OP_EMIT
+#   contract load / file reads          ↔  AIR_OP_READ (origin=AIR_ORIGIN_ENVIRONMENT)
+#
+# This machine is itself an input to the consistency enforcement framework:
+# its TAH signature becomes the reference for any LLM or deterministic tool
+# that produces an equivalent enforcement workflow.
+#
+# hsmgen processes this file and generates a zero-dependency C FSM.
+
+machine CodegenConsistency {
+    initial: Idle
+
+    # ── Idle ─────────────────────────────────────────────────────────────
+    state Idle {
+        entry: consistency_on_idle_entry()
+        on CodegenRunStarted -> Loading
+        on Shutdown          -> Done
+    }
+
+    # ── Loading ───────────────────────────────────────────────────────────
+    # Read contract + lift candidate source to Agent IR / CFG
+    state Loading {
+        initial: LoadingContract
+
+        on LoadError -> Failed
+        on Cancel    -> Idle
+
+        # ── LoadingContract ───────────────────────────────────────────────
+        # AIR_OP_READ — fetch the ConsistencyContract for the current spec
+        state LoadingContract {
+            entry: consistency_load_contract()
+            on ContractLoaded  -> LoadingCandidate
+            on ContractMissing -> Done
+        }
+
+        # ── LoadingCandidate ──────────────────────────────────────────────
+        # AIR_OP_READ + AIR_OP_CALL — read generated file and lift to IR/CFG
+        state LoadingCandidate {
+            entry: consistency_lift_candidate()
+            on CandidateLifted -> Comparing
+            on LiftFailed      -> Failed
+        }
+    }
+
+    # ── Comparing ─────────────────────────────────────────────────────────
+    # Core analysis: runs structure, naming, and coverage checks in sequence.
+    state Comparing {
+        initial: StructuralCheck
+        on CompareError -> Failed
+        on Cancel       -> Idle
+
+        # ── StructuralCheck ───────────────────────────────────────────────
+        # AIR_OP_CALL — compute TAH signature and compare against reference
+        # CFG_NODE_CONDITION — branches on similarity threshold
+        state StructuralCheck {
+            entry: consistency_compare_tah()
+            on StructuralPass -> NamingCheck
+            on StructuralFail -> RecordViolation.Structural
+        }
+
+        # ── NamingCheck ───────────────────────────────────────────────────
+        # AIR_OP_CALL — verify naming conventions in generated identifiers
+        state NamingCheck {
+            entry: consistency_check_naming()
+            on NamingPass -> CoverageCheck
+            on NamingFail -> RecordViolation.Naming
+        }
+
+        # ── CoverageCheck ─────────────────────────────────────────────────
+        # AIR_OP_CALL — verify type/field/state/transition coverage
+        state CoverageCheck {
+            entry: consistency_check_coverage()
+            on CoveragePass    -> TandemCheck
+            on CoverageFail    -> RecordViolation.Coverage
+        }
+
+        # ── TandemCheck ───────────────────────────────────────────────────
+        # AIR_OP_CALL — if tandem mode, cross-validate det vs LLM outputs
+        # CFG_NODE_CONDITION — skipped when not in tandem mode
+        state TandemCheck {
+            entry: consistency_cross_validate_tandem()
+            on TandemPass    -> AllChecksDone
+            on TandemFail    -> RecordViolation.Drift
+            on NotTandemMode -> AllChecksDone
+        }
+
+        # ── RecordViolation ───────────────────────────────────────────────
+        # Composite: captures the failing check type and decides whether to
+        # continue checking or stop immediately (strict policy).
+        state RecordViolation {
+            initial: Structural
+
+            on ViolationRecorded -> Comparing.history
+            on PolicyStrict      -> Blocked
+
+            state Structural {
+                entry: consistency_record_structural_violation()
+                on Done -> RecordViolation.exit
+            }
+            state Naming {
+                entry: consistency_record_naming_violation()
+                on Done -> RecordViolation.exit
+            }
+            state Coverage {
+                entry: consistency_record_coverage_violation()
+                on Done -> RecordViolation.exit
+            }
+            state Drift {
+                entry: consistency_record_drift_violation()
+                on Done -> RecordViolation.exit
+            }
+        }
+
+        # ── AllChecksDone ─────────────────────────────────────────────────
+        # CFG_NODE_MERGE — converge all check paths before reporting
+        state AllChecksDone {
+            entry: consistency_finalize_violations()
+            on HasViolations  -> Reporting
+            on NoViolations   -> Reporting
+        }
+    }
+
+    # ── Reporting ─────────────────────────────────────────────────────────
+    # AIR_OP_EMIT — build ConsistencyReport and apply enforcement policy
+    state Reporting {
+        entry: consistency_emit_report()
+        on PolicyReportOnly -> Done
+        on PolicyWarn       -> Done
+        on PolicyEnforce    -> Enforcing
+        on PolicyStrict     -> Enforcing
+    }
+
+    # ── Enforcing ─────────────────────────────────────────────────────────
+    # Applies the configured enforcement action to the generated artifact.
+    state Enforcing {
+        initial: Deciding
+
+        state Deciding {
+            entry: consistency_evaluate_policy()
+            on PassedEnforcement -> Done
+            on FailedEnforcement -> Blocked
+        }
+    }
+
+    # ── Blocked ───────────────────────────────────────────────────────────
+    # CFG_NODE_EXIT (error path) — generated output rejected; pipeline halted
+    state Blocked {
+        entry: consistency_on_blocked()
+        on OverrideAccepted -> Done
+        on Reset            -> Idle
+    }
+
+    # ── Failed ────────────────────────────────────────────────────────────
+    # Unexpected internal failure (e.g. lift error, missing contract)
+    state Failed {
+        entry: consistency_on_failed()
+        on Reset -> Idle
+    }
+
+    # ── Done ──────────────────────────────────────────────────────────────
+    # CFG_NODE_EXIT (normal path) — enforcement complete
+    state Done {
+        entry: consistency_on_done()
+        on Reset -> Idle
+    }
+}

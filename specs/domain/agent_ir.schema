@@ -1,0 +1,168 @@
+# agent_ir.schema
+# Agent Intermediate Representation (Agent IR)
+#
+# Agent IR is the agentic analogue of VEX IR (Valgrind Intermediate
+# Representation).  Where VEX IR lifts architecture-specific machine
+# instructions (x86, ARM, …) into a common format for static/dynamic
+# analysis, Agent IR lifts framework-specific agent actions (LangChain
+# tool calls, CrewAI task steps, AutoGen messages, human decisions, …)
+# into a common normalised form.
+#
+# This enables:
+#   • Cross-framework CFG construction and topology-aware hashing
+#   • Replay / simulation of agent chains independent of framework
+#   • Structural comparison of agent workflows for clone detection and
+#     best-practice diffusion
+#   • Formal verification of agent control-flow properties
+#
+# VEX IR → Agent IR mapping (see VexIrMapping type below):
+#   VEX IMark    ↔  AIR_OP_STEP     (one atomic agent action)
+#   VEX WrTmp    ↔  AIR_OP_ASSIGN   (bind result to name)
+#   VEX Get      ↔  AIR_OP_READ     (read context / memory)
+#   VEX Put      ↔  AIR_OP_WRITE    (update context / memory)
+#   VEX CCall    ↔  AIR_OP_CALL     (invoke tool / sub-agent)
+#   VEX Exit     ↔  AIR_OP_BRANCH   (conditional transition)
+#   VEX IRJump   ↔  AIR_OP_JUMP     (unconditional transition)
+#   VEX DIRTY    ↔  AIR_OP_EFFECT   (side-effecting operation)
+#
+# origin encoding:
+#   0 = human          (human decision / process step)
+#   1 = llm            (LLM reasoning / generation)
+#   2 = tool           (tool / function call)
+#   3 = environment    (environment observation / sensor)
+#   4 = orchestrator   (multi-agent coordinator)
+#
+# framework encoding:
+#   0 = raw            (framework-agnostic / hand-written)
+#   1 = langchain
+#   2 = crewai
+#   3 = autogen
+#   4 = cosmo_bde      (native cosmo-bde agentic spec)
+#   5 = openai_fn      (OpenAI function-calling protocol)
+#
+# @version 1.0.0
+# @generator schemagen
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent IR Operation (atomic action within a block)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type AgentIrOp {
+    id:           u32              # Operation index within block
+    opcode:       u8               # AIR_OP_* (see constants)
+    origin:       u8               # Who performs this op (human/llm/tool/…)
+    operand_count: u8              # Number of operands
+    result_name:  string[64]       # Name of result binding (empty = void)
+    operand_a:    string[128]      # First operand (tool name, field, …)
+    operand_b:    string[128]      # Second operand
+    guard:        string[256]      # Guard / condition for branch ops
+    metadata:     string[256]      # Free-form annotations (prompt template, etc.)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent IR Block (basic block of operations, ≈ VEX IRSB superblock)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type AgentIrBlock {
+    id:           u32              # Unique block ID
+    label:        string[128]      # Human-readable label
+    op_count:     u32              # Number of AgentIrOps in this block
+    is_entry:     i32              # 1 if this is the function's entry block
+    is_exit:      i32              # 1 if this block can end the function
+    fallthrough:  u32              # Block ID to fall through to (0 = none)
+    cfg_node_id:  u32              # Corresponding CfgNode id (0 = none)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent IR Function (lifted representation of one agent / workflow / function)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type AgentIrFunction {
+    name:           string[128]    # Function / agent / workflow name
+    framework:      u8             # Source framework
+    origin:         u8             # Primary actor origin
+    block_count:    u32            # Number of AgentIrBlocks
+    op_count:       u32            # Total AgentIrOps
+    has_recursion:  i32            # Has back-edges / recursive calls
+    has_indirect:   i32            # Has dynamically resolved transitions
+    entry_block_id: u32            # First block
+    module_name:    string[128]    # Module / file / agent name
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# VEX IR → Agent IR Mapping reference entry
+# ══════════════════════════════════════════════════════════════════════════════
+
+type VexIrMapping {
+    vex_tag:          string[32]   # VEX IR tag (e.g. "Ist_WrTmp")
+    agent_opcode:     u8           # AIR_OP_* counterpart
+    binary_example:   string[128]  # Binary analysis example
+    agent_example:    string[128]  # Agentic engineering example
+    doc:              string[256]  # Explanation of the mapping
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent IR Lift Request (input to the lifter)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type AgentIrLiftRequest {
+    source_name:    string[128]    # Workflow / binary / spec name
+    source_path:    string[256]    # File path to process
+    framework:      u8             # Input framework
+    origin:         u8             # Primary actor origin
+    lift_cfg:       i32            # 1 = also build CfgGraph
+    lift_tah:       i32            # 1 = also compute TahSignature
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Agent IR Lift Result
+# ══════════════════════════════════════════════════════════════════════════════
+
+type AgentIrLiftResult {
+    source_name:    string[128]
+    status:         i32            # 0=ok, 1=partial, 2=failed
+    function_count: u32
+    block_count:    u32
+    op_count:       u32
+    lift_time_us:   u64
+    error_msg:      string[256]
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Constants
+# ══════════════════════════════════════════════════════════════════════════════
+
+# Opcodes (AIR_OP_*)
+const AIR_OP_NOP        = 0     # No-operation
+const AIR_OP_STEP       = 1     # Atomic agent step (≈ VEX IMark)
+const AIR_OP_ASSIGN     = 2     # Bind result to name (≈ VEX WrTmp)
+const AIR_OP_READ       = 3     # Read context/memory (≈ VEX Get)
+const AIR_OP_WRITE      = 4     # Write context/memory (≈ VEX Put)
+const AIR_OP_CALL       = 5     # Call tool / sub-agent (≈ VEX CCall)
+const AIR_OP_RETURN     = 6     # Return from function (≈ VEX IRReturn)
+const AIR_OP_BRANCH     = 7     # Conditional transition (≈ VEX Exit)
+const AIR_OP_JUMP       = 8     # Unconditional transition (≈ VEX IRJump)
+const AIR_OP_EFFECT     = 9     # Side-effecting op (≈ VEX DIRTY)
+const AIR_OP_OBSERVE    = 10    # Observe environment / sensor input
+const AIR_OP_EMIT       = 11    # Emit output / signal
+const AIR_OP_BARRIER    = 12    # Synchronisation point (multi-agent)
+
+# Origin codes
+const AIR_ORIGIN_HUMAN       = 0
+const AIR_ORIGIN_LLM         = 1
+const AIR_ORIGIN_TOOL        = 2
+const AIR_ORIGIN_ENVIRONMENT = 3
+const AIR_ORIGIN_ORCHESTRATOR = 4
+
+# Framework codes
+const AIR_FW_RAW        = 0
+const AIR_FW_LANGCHAIN  = 1
+const AIR_FW_CREWAI     = 2
+const AIR_FW_AUTOGEN    = 3
+const AIR_FW_COSMO_BDE  = 4
+const AIR_FW_OPENAI_FN  = 5
+
+# Status codes
+const AIR_STATUS_OK      = 0
+const AIR_STATUS_PARTIAL = 1
+const AIR_STATUS_FAILED  = 2

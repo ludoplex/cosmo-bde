@@ -1,0 +1,108 @@
+# agent_graph.hsm
+# Agentic Engineering — Agent Lifecycle as a Hierarchical State Machine
+#
+# Models a single agent's lifecycle using transition-graph semantics drawn
+# from CFG analysis.  Each state corresponds to a CfgNode; each on-clause
+# is a CfgEdge.  The machine is both a spec for generating a C FSM and a
+# living example of how TAH/CFG concepts apply to agentic engineering.
+#
+# Mapping to CFG concepts:
+#   AgentGraph (this machine)  ↔  CfgFunction  (per-function transition graph)
+#   Each state                 ↔  CfgNode
+#   Each `on Event -> Target`  ↔  CfgEdge
+#   Initial state (Idle)       ↔  CFG_NODE_ENTRY
+#   Terminal state (Done/Error)↔  CFG_NODE_EXIT
+#   sub-agent call             ↔  CFG_NODE_CALL + CFG_EDGE_CALL
+#   guard conditions           ↔  CFG_EDGE_TRUE / CFG_EDGE_FALSE
+#   retry loops                ↔  CFG_NODE_LOOP_HEAD + back-edge
+#
+# Note: entry/exit actions mirror AIR_OP_STEP operations in Agent IR.
+# hsmgen processes this file and generates a zero-dependency C FSM.
+
+machine AgentGraph {
+    initial: Idle
+
+    # ── Idle ──────────────────────────────────────────────────────────────
+    # CFG_NODE_ENTRY — agent is quiescent, waiting for a task
+    state Idle {
+        entry: agent_on_idle_entry()
+        on Task           -> Working
+        on Shutdown       -> Done
+    }
+
+    # ── Working ───────────────────────────────────────────────────────────
+    # Composite state; mirrors a CFG function body with internal branches.
+    state Working {
+        initial: Thinking
+        on Cancel         -> Idle
+        on FatalError     -> Error
+
+        # ── Thinking ──────────────────────────────────────────────────────
+        # CFG_NODE_CONDITION — LLM reasons; decides next action
+        # Agent IR: AIR_OP_STEP (origin=AIR_ORIGIN_LLM)
+        state Thinking {
+            entry: agent_llm_reason()
+            on ToolRequired   -> Calling
+            on ResponseReady  -> Responding
+            on NeedMoreContext -> Observing
+            on MaxDepth        -> Responding
+        }
+
+        # ── Calling ───────────────────────────────────────────────────────
+        # CFG_NODE_CALL — invoking a tool or sub-agent
+        # Agent IR: AIR_OP_CALL (origin=AIR_ORIGIN_TOOL)
+        state Calling {
+            entry: agent_tool_invoke()
+            on ToolSuccess -> Thinking
+            on ToolFailure -> Thinking
+            on Timeout     -> Error.Recoverable
+        }
+
+        # ── Observing ─────────────────────────────────────────────────────
+        # CFG_NODE_NORMAL — reading environment / retrieving context
+        # Agent IR: AIR_OP_OBSERVE (origin=AIR_ORIGIN_ENVIRONMENT)
+        state Observing {
+            entry: agent_observe_environment()
+            on Observed   -> Thinking
+            on Timeout    -> Error.Recoverable
+        }
+    }
+
+    # ── Responding ────────────────────────────────────────────────────────
+    # CFG_NODE_EXIT — agent emits its final output
+    # Agent IR: AIR_OP_EMIT
+    state Responding {
+        entry: agent_emit_response()
+        on Accepted    -> Idle
+        on Rejected    -> Working.Thinking
+        on Clarify     -> Working.Thinking
+    }
+
+    # ── Error ─────────────────────────────────────────────────────────────
+    # Composite error handler; mirrors an exception-path CFG subgraph.
+    state Error {
+        initial: Recoverable
+        on Reset  -> Idle
+
+        # ── Recoverable ───────────────────────────────────────────────────
+        # CFG_NODE_LOOP_HEAD — retry loop entry after a transient failure
+        state Recoverable {
+            entry: agent_on_recoverable_error()
+            on Retry       -> Working.history
+            on MaxRetries  -> Fatal
+        }
+
+        # ── Fatal ─────────────────────────────────────────────────────────
+        # CFG_NODE_EXIT (error path) — unrecoverable failure
+        state Fatal {
+            entry: agent_on_fatal_error()
+            on Reset  -> Done
+        }
+    }
+
+    # ── Done ──────────────────────────────────────────────────────────────
+    # CFG_NODE_EXIT (normal path) — agent lifecycle complete
+    state Done {
+        entry: agent_on_done()
+    }
+}

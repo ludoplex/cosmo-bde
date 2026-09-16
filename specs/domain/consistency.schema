@@ -1,0 +1,219 @@
+# consistency.schema
+# Code-Generation Consistency Enforcement
+#
+# Enforces structural and semantic consistency across source code produced by
+# ANY combination of generators:
+#   • Deterministic — schemagen, smgen, hsmgen, bddgen, and other Ring 0 tools
+#   • LLM-based    — code written or refined by an LLM agent
+#   • Tandem       — deterministic skeleton refined by an LLM, or vice versa
+#
+# How it works
+# ─────────────
+# 1. A spec file (.schema / .sm / .hsm / .feature / …) is the SINGLE SOURCE OF
+#    TRUTH.  The deterministic generator is run once to produce the REFERENCE
+#    output and its TAH signature is stored in a ConsistencyContract.
+#
+# 2. Any subsequent code generation (by an LLM or another deterministic run)
+#    produces a CANDIDATE.  The enforcement pipeline:
+#      a. Lifts the candidate source to Agent IR / CFG
+#      b. Computes the candidate's TAH signature
+#      c. Compares against the reference signature
+#      d. Checks naming conventions and schema field coverage
+#      e. Emits ConsistencyViolation records for every deviation
+#      f. Produces a ConsistencyReport with pass/fail decision
+#
+# 3. policy_mode controls what happens on violation:
+#    0 = report_only  — log violations, never block
+#    1 = warn         — print warnings, return success exit code
+#    2 = enforce      — non-zero exit code on any violation
+#    3 = strict       — fail on first violation (zero-tolerance)
+#
+# violation_type encoding:
+#   0 = structural    — TAH similarity below threshold
+#   1 = naming        — function/type name violates convention
+#   2 = missing_type  — schema type not implemented in output
+#   3 = missing_field — schema field missing in output struct
+#   4 = missing_state — FSM state/transition absent in output
+#   5 = coverage      — overall coverage below minimum
+#   6 = drift         — deterministic and LLM outputs differ structurally
+#   7 = forbidden     — explicitly forbidden pattern found
+#
+# generator_type encoding:
+#   0 = deterministic   — Ring 0/1/2 code-gen tools
+#   1 = llm             — LLM-generated code
+#   2 = tandem          — both generators applied (cross-validate)
+#   3 = human           — hand-written code
+#
+# @version 1.0.0
+# @generator schemagen
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Consistency Contract
+# Each spec file has at most one contract defining what valid output looks like.
+# ══════════════════════════════════════════════════════════════════════════════
+
+type ConsistencyContract {
+    name:                string[128]    # Contract name (usually spec file name)
+    spec_path:           string[256]    # Source spec file (.schema/.sm/.hsm/…)
+    spec_type:           string[16]     # "schema", "sm", "hsm", "feature", etc.
+
+    # Reference TAH (computed from deterministic generator output)
+    ref_tah_function:    string[128]    # Name of the reference TahSignature
+    ref_tah_node_count:  u32            # Expected CFG node count
+    ref_tah_edge_count:  u32            # Expected CFG edge count
+    ref_similarity_min:  u32            # Minimum similarity score (0-100)
+
+    # Naming convention rules
+    naming_prefix:       string[32]     # Required function/type name prefix
+    naming_suffix:       string[32]     # Required name suffix (e.g. "_t", "_sm")
+    naming_pattern:      string[128]    # Regex-like pattern description
+
+    # Coverage requirements
+    type_coverage_min:   u32            # % of schema types that must appear (0-100)
+    field_coverage_min:  u32            # % of schema fields that must appear (0-100)
+    state_coverage_min:  u32            # % of FSM states that must appear (0-100)
+    transition_coverage_min: u32        # % of FSM transitions that must appear (0-100)
+
+    # Enforcement policy
+    policy_mode:         u8             # 0=report_only 1=warn 2=enforce 3=strict
+    applies_to:          u8             # Bitmask: 1=det 2=llm 4=tandem 8=human
+
+    version:             string[32]     # Contract version
+    created_at:          u64            # Unix timestamp
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Code Generation Run
+# Metadata for a single generation pass (by any generator type).
+# ══════════════════════════════════════════════════════════════════════════════
+
+type CodegenRun {
+    id:              u32               # Unique run ID
+    contract_name:   string[128]       # Which contract this run is checked against
+    generator_type:  u8                # 0=deterministic 1=llm 2=tandem 3=human
+    generator_name:  string[64]        # "schemagen", "gpt-4o", "claude-3-5-sonnet", …
+    spec_path:       string[256]       # Input spec file used
+    output_path:     string[256]       # Generated output file(s)
+    timestamp:       u64               # Unix timestamp
+    duration_ms:     u32               # Generation time
+    tandem_run_id:   u32               # Paired run for tandem mode (0 = none)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Consistency Violation
+# One deviation found during enforcement of a contract.
+# ══════════════════════════════════════════════════════════════════════════════
+
+type ConsistencyViolation {
+    run_id:          u32               # Which CodegenRun triggered this
+    contract_name:   string[128]       # Which contract was violated
+    violation_type:  u8                # 0=structural 1=naming 2=missing_type …
+    severity:        u8                # 0=info 1=warning 2=error 3=fatal
+    location:        string[256]       # File path + line or function name
+    expected:        string[256]       # What was expected
+    actual:          string[256]       # What was found
+    message:         string[512]       # Human-readable description
+    fix_hint:        string[512]       # Suggested fix (for LLM / human consumption)
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Consistency Report
+# Aggregated result of one enforcement run against a contract.
+# ══════════════════════════════════════════════════════════════════════════════
+
+type ConsistencyReport {
+    run_id:              u32           # The CodegenRun this report covers
+    contract_name:       string[128]
+    generator_type:      u8
+    generator_name:      string[64]
+    status:              i32           # 0=passed 1=warned 2=failed 3=blocked
+    violation_count:     u32           # Total violations
+    error_count:         u32           # Violations at severity >= error
+    structural_score:    u32           # TAH similarity 0-100
+    type_coverage:       u32           # % of schema types found 0-100
+    field_coverage:      u32           # % of schema fields found 0-100
+    state_coverage:      u32           # % of FSM states found 0-100
+    transition_coverage: u32           # % of FSM transitions found 0-100
+    naming_violations:   u32           # Count of naming violations
+    drift_score:         u32           # Structural drift between det vs LLM (0-100, tandem only)
+    timestamp:           u64
+    duration_ms:         u32
+    summary:             string[512]   # One-line human/LLM-readable summary
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Tandem Diff
+# When both a deterministic run and an LLM run exist, records their structural
+# delta so the cross-validation result is traceable.
+# ══════════════════════════════════════════════════════════════════════════════
+
+type TandemDiff {
+    det_run_id:          u32           # Deterministic CodegenRun id
+    llm_run_id:          u32           # LLM CodegenRun id
+    tah_similarity:      u32           # Structural similarity 0-100
+    node_delta:          i32           # CFG node count difference
+    edge_delta:          i32           # CFG edge count difference
+    type_delta:          i32           # Type count difference
+    naming_delta:        u32           # Naming violations unique to LLM output
+    consensus_status:    u8            # 0=agree 1=minor_diff 2=diverged
+    recommendation:      string[512]   # Guidance for resolving divergence
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Enforcement Config (per-project or per-spec overrides)
+# ══════════════════════════════════════════════════════════════════════════════
+
+type EnforcementConfig {
+    project_name:        string[128]   # Project this config applies to
+    default_policy:      u8            # Default policy_mode for all contracts
+    llm_similarity_min:  u32           # Global minimum TAH score for LLM output
+    det_similarity_min:  u32           # Global minimum TAH score for deterministic
+    tandem_drift_max:    u32           # Maximum allowed tandem drift score
+    naming_strict:       i32           # 1 = reject any naming violation
+    coverage_strict:     i32           # 1 = reject any coverage drop below minimum
+    block_on_fatal:      i32           # 1 = stop pipeline immediately on fatal violation
+    output_format:       u8            # 0=text 1=json 2=junit-xml
+}
+
+# ══════════════════════════════════════════════════════════════════════════════
+# Constants
+# ══════════════════════════════════════════════════════════════════════════════
+
+const CONSISTENCY_POLICY_REPORT_ONLY = 0
+const CONSISTENCY_POLICY_WARN        = 1
+const CONSISTENCY_POLICY_ENFORCE     = 2
+const CONSISTENCY_POLICY_STRICT      = 3
+
+const CODEGEN_TYPE_DETERMINISTIC = 0
+const CODEGEN_TYPE_LLM           = 1
+const CODEGEN_TYPE_TANDEM        = 2
+const CODEGEN_TYPE_HUMAN         = 3
+
+const VIOLATION_STRUCTURAL    = 0
+const VIOLATION_NAMING        = 1
+const VIOLATION_MISSING_TYPE  = 2
+const VIOLATION_MISSING_FIELD = 3
+const VIOLATION_MISSING_STATE = 4
+const VIOLATION_COVERAGE      = 5
+const VIOLATION_DRIFT         = 6
+const VIOLATION_FORBIDDEN     = 7
+
+const VIOLATION_SEVERITY_INFO    = 0
+const VIOLATION_SEVERITY_WARNING = 1
+const VIOLATION_SEVERITY_ERROR   = 2
+const VIOLATION_SEVERITY_FATAL   = 3
+
+const REPORT_STATUS_PASSED  = 0
+const REPORT_STATUS_WARNED  = 1
+const REPORT_STATUS_FAILED  = 2
+const REPORT_STATUS_BLOCKED = 3
+
+const TANDEM_CONSENSUS_AGREE      = 0
+const TANDEM_CONSENSUS_MINOR_DIFF = 1
+const TANDEM_CONSENSUS_DIVERGED   = 2
+
+const APPLIES_TO_DETERMINISTIC = 1   # bitmask bit 0
+const APPLIES_TO_LLM           = 2   # bitmask bit 1
+const APPLIES_TO_TANDEM        = 4   # bitmask bit 2
+const APPLIES_TO_HUMAN         = 8   # bitmask bit 3
+const APPLIES_TO_ALL           = 15  # all sources
