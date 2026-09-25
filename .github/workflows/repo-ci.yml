@@ -46,7 +46,7 @@ jobs:
     name: Ring 0 Generators
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc
         uses: ./.github/actions/setup-cosmocc
@@ -76,7 +76,7 @@ jobs:
     name: schemagen Composability
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc (pinned, cosmocc.mk)
         uses: ./.github/actions/setup-cosmocc
@@ -129,7 +129,7 @@ jobs:
     name: Full Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc (pinned, cosmocc.mk)
         uses: ./.github/actions/setup-cosmocc
@@ -151,7 +151,7 @@ jobs:
     name: Meta Tests
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc (pinned, cosmocc.mk)
         uses: ./.github/actions/setup-cosmocc
@@ -173,7 +173,7 @@ jobs:
     name: APE Build (cosmocc)
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc
         uses: ./.github/actions/setup-cosmocc
@@ -200,7 +200,7 @@ jobs:
     name: Documentation
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check CLAUDE.md size (must be < 200 lines)
         run: |
@@ -232,7 +232,7 @@ jobs:
     name: Template Initialization
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           path: template-test
 
@@ -272,7 +272,7 @@ jobs:
     # Only run if e9studio submodule is accessible (requires private repo access)
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         # Don't use recursive - e9studio is private
 
       - name: Check for e9studio submodule
