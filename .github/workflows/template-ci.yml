@@ -71,6 +71,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
+
       - name: Build tools
         run: make tools
 
@@ -114,6 +117,9 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
 
       - name: Build tools
         run: make tools
