@@ -38,7 +38,7 @@ jobs:
     name: Build & Test
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc
         uses: ./.github/actions/setup-cosmocc
@@ -72,7 +72,7 @@ jobs:
     name: Drift Detection
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc (pinned, cosmocc.mk)
         uses: ./.github/actions/setup-cosmocc
@@ -91,7 +91,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: [build, drift]
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc
         uses: ./.github/actions/setup-cosmocc
@@ -119,7 +119,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Setup cosmocc (pinned, cosmocc.mk)
         uses: ./.github/actions/setup-cosmocc
@@ -162,7 +162,7 @@ jobs:
     needs: build
     continue-on-error: true
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         # Don't use recursive - e9studio is private
 
       - name: Check for e9studio submodule
@@ -202,7 +202,7 @@ jobs:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     needs: build
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Check Ring 2 tool availability
         run: |

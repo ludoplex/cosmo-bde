@@ -23,7 +23,7 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         # Don't use recursive submodules - some are private
         # Public submodules checked out below if needed
 
@@ -75,7 +75,7 @@ jobs:
   native:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         # Don't use recursive submodules - some are private
 
       - name: Install host SQLite headers (native sql-check)
