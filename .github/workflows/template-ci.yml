@@ -29,6 +29,9 @@ env:
   # Set to 'true' to enable APE builds on every push
   ENABLE_APE_BUILD: 'false'
 
+permissions:
+  contents: read
+
 jobs:
   # ── Build and Test (cosmocc for APE portability) ──────────────────────────
   build:

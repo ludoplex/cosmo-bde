@@ -37,6 +37,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   # ── Test Ring 0 Generators (cosmocc) ───────────────────────────────────────
   generators:
