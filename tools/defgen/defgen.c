@@ -23,6 +23,7 @@
  */
 
 #include <stdio.h>
+#include "../cosmo_harden.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -155,6 +156,7 @@ static int ensure_output_dir(const char *outdir) {
 }
 
 int main(int argc, char *argv[]) {
+    tool_harden();
     if (argc < 2) {
         print_usage();
         return 1;

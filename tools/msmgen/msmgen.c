@@ -20,6 +20,7 @@
  */
 
 #include <stdio.h>
+#include "../cosmo_harden.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -73,11 +74,7 @@ static void to_upper(char *s) {
 static int ensure_output_dir(const char *outdir) {
     struct stat st;
     if (stat(outdir, &st) == 0) return 0;
-#ifdef _WIN32
-    return mkdir(outdir);
-#else
     return mkdir(outdir, 0755);
-#endif
 }
 
 static int parse_msm(const char *filename) {
@@ -298,6 +295,7 @@ static void print_usage(void) {
 }
 
 int main(int argc, char *argv[]) {
+    tool_harden();
     if (argc < 2) { print_usage(); return 1; }
 
     const char *input = argv[1];

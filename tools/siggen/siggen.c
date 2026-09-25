@@ -14,6 +14,7 @@
  */
 
 #include <stdio.h>
+#include "../cosmo_harden.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -187,6 +188,7 @@ static void print_usage(void) {
 }
 
 int main(int argc, char *argv[]) {
+    tool_harden();
     if (argc < 2) { print_usage(); return 1; }
 
     const char *input = argv[1];
@@ -207,11 +209,7 @@ int main(int argc, char *argv[]) {
 
     struct stat st;
     if (stat(outdir, &st) != 0) {
-#ifdef _WIN32
-        mkdir(outdir);
-#else
         mkdir(outdir, 0755);
-#endif
     }
 
     return generate_sig_h(outdir, prefix);
