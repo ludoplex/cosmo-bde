@@ -196,7 +196,8 @@ All paths lead to C. All C compiles with cosmocc to Actually Portable Executable
 # Clone and build
 git clone https://github.com/ludoplex/cosmo-bde.git
 cd cosmo-bde
-make
+make toolchain   # once: pinned cosmocc 4.0.2, sha256-verified (cosmocc.mk)
+make             # APE build; native host-only build: make CC=cc
 
 # Run the example application
 make run
@@ -304,6 +305,7 @@ make              # Build Ring 0 tools + application
 make regen        # Auto-detect tools, regenerate all code
 make verify       # Regen + check for drift (CI gate)
 make test         # Run BDD tests
+make check        # Unit tests + SQLite round-trip (make cosmo-src first)
 make clean        # Remove build artifacts
 make help         # Show all targets
 ```

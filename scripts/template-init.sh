@@ -164,8 +164,8 @@ if check_tool cosmocc; then
     log_info "cosmocc available - APE builds enabled"
     echo "  Build APE binary: CC=cosmocc make clean all"
 else
-    log_warn "cosmocc not found - using native compiler"
-    echo "  Install from: https://github.com/jart/cosmopolitan"
+    log_warn "cosmocc not found - the default build needs it"
+    echo "  Install the pinned toolchain: make toolchain   (or build natively: make CC=cc)"
 fi
 
 # Summary
