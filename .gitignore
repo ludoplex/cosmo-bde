@@ -16,3 +16,6 @@ Thumbs.db
 
 # CodeQL
 _codeql_detected_source_root
+
+# Pinned cosmocc toolchain (make toolchain)
+.cosmocc/

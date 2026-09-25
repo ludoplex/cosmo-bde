@@ -1,6 +1,6 @@
 # cosmo-bde Architecture
 
-> **LLM Reference Document** - Comprehensive system architecture for AI assistants.
+> **LLM Reference Document** - Comprehensive system architecture for LLM-based coding assistants.
 >
 > See also: `RING_CLASSIFICATION.md`, `INTEROP_MATRIX.md`, `LITERATE.md`
 
@@ -363,9 +363,9 @@ See `docs/APE_LIVERELOAD.md` for detailed live reload documentation.
    .github/actions/setup-cosmocc/    (Composite Action - Shared)
    +--------------------------------------------------------------------+
    |  steps:                                                             |
-   |    - Cache ~/.cosmocc (key: cosmocc-${{ runner.os }})              |
-   |    - Download cosmocc.zip if cache miss                             |
-   |    - Add ~/.cosmocc/bin to PATH                                     |
+   |    - Cache .cosmocc (key: runner.os + hash of cosmocc.mk)           |
+   |    - make toolchain: pinned cosmocc, sha256-verified, if cache miss |
+   |    - Add .cosmocc/<version>/bin to PATH                             |
    +--------------------------------------------------------------------+
                                   |
                 +---------------- | ----------------+

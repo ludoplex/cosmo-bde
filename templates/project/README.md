@@ -76,8 +76,9 @@ sudo make livereload
 
 Install cosmocc:
 ```bash
-mkdir -p ~/.cosmo/bin
-curl -sSL https://cosmo.zip/pub/cosmocc/cosmocc.zip -o /tmp/cosmocc.zip
-unzip /tmp/cosmocc.zip -d ~/.cosmo
+# pinned release; verify before unpacking
+curl -fsSLo /tmp/cosmocc-4.0.2.zip https://cosmo.zip/pub/cosmocc/cosmocc-4.0.2.zip
+echo "85b8c37a406d862e656ad4ec14be9f6ce474c1b436b9615e91a55208aced3f44  /tmp/cosmocc-4.0.2.zip" | shasum -a 256 -c -
+mkdir -p ~/.cosmo && unzip -q /tmp/cosmocc-4.0.2.zip -d ~/.cosmo
 export PATH="$HOME/.cosmo/bin:$PATH"
 ```

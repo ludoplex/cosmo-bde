@@ -15,11 +15,9 @@ All Ring 0 and Ring 1 tools are built with [cosmocc](https://github.com/jart/cos
 - FreeBSD, OpenBSD, NetBSD (x86_64)
 
 ```bash
-# Install cosmocc (one-time setup)
-mkdir -p ~/.cosmocc
-curl -L https://cosmo.zip/pub/cosmocc/cosmocc.zip -o /tmp/cosmocc.zip
-unzip /tmp/cosmocc.zip -d ~/.cosmocc
-export PATH="$HOME/.cosmocc/bin:$PATH"
+# Install the pinned cosmocc (one-time; version + sha256 live in cosmocc.mk)
+make toolchain
+export PATH="$PWD/.cosmocc/4.0.2/bin:$PATH"
 
 # Build portable tools
 make tools    # Ring 0: schemagen, lemon (APE)

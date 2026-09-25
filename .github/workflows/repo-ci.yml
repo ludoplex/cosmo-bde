@@ -37,6 +37,9 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   # ── Test Ring 0 Generators (cosmocc) ───────────────────────────────────────
   generators:
@@ -74,6 +77,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
 
       - name: Build schemagen
         run: make tools
@@ -125,6 +131,9 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
+
       - name: Clean build
         run: make clean
 
@@ -143,6 +152,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
 
       - name: Make scripts executable
         run: chmod +x .forge/*.sh scripts/*.sh
@@ -212,7 +224,6 @@ jobs:
 
       - name: Check LLM symlinks
         run: |
-          test -L AI.md || true
           test -L LLM.md || true
           test -L CONTEXT.md || true
 
@@ -239,10 +250,11 @@ jobs:
           command -v make
 
           # Verify build works
-          make tools
-          make regen
-          make app
-          make run
+          # native toolchain check (the APE build is covered by ape-build)
+          make CC=cc tools
+          make CC=cc regen
+          make CC=cc app
+          make CC=cc run
 
       - name: Test BDE workflow script (if exists)
         run: |

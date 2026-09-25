@@ -313,7 +313,7 @@ Tools that are purely C or sh, no C++/Python/Ruby dependencies:
 | Need | Tool | License | Notes |
 |------|------|---------|-------|
 | HTTP Server | CivetWeb | MIT | Fork of Mongoose pre-GPL |
-| Database | SQLite | Public Domain | Vendored amalgamation |
+| Database | SQLite | Public Domain | Reused from Cosmopolitan third_party/sqlite3 (not vendored) |
 | GUI | Nuklear | MIT/PD | Single header |
 | JSON | yyjson | MIT | Fast, small |
 

@@ -100,7 +100,7 @@ check_build "bddgen" "bddgen" || true
 
 echo
 echo "Vendored libraries (vendors/libs/):"
-check_dir "SQLite" "vendors/libs/sqlite" || true
+check_dir "SQLite (cosmo)" "vendors/submodules/cosmopolitan/third_party/sqlite3" || true
 check_dir "yyjson" "vendors/libs/yyjson" || true
 check_dir "Nuklear" "vendors/libs/nuklear" || true
 

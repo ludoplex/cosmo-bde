@@ -29,6 +29,9 @@ env:
   # Set to 'true' to enable APE builds on every push
   ENABLE_APE_BUILD: 'false'
 
+permissions:
+  contents: read
+
 jobs:
   # ── Build and Test (cosmocc for APE portability) ──────────────────────────
   build:
@@ -70,6 +73,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
 
       - name: Build tools
         run: make tools
@@ -114,6 +120,9 @@ jobs:
     needs: build
     steps:
       - uses: actions/checkout@v4
+
+      - name: Setup cosmocc (pinned, cosmocc.mk)
+        uses: ./.github/actions/setup-cosmocc
 
       - name: Build tools
         run: make tools

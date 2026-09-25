@@ -19,10 +19,12 @@
  */
 
 #include <stdio.h>
+#include "cosmo_harden.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 #include <stdint.h>
+#include <inttypes.h>
 #include <time.h>
 
 #define SCHEMAGEN_VERSION "2.0.0"
@@ -249,13 +251,13 @@ static int parse_field(const char *line, field_t *f) {
 
     const char *constraint = strstr(line, "range:");
     if (constraint) {
-        sscanf(constraint, "range: %ld..%ld", &f->range_min, &f->range_max);
+        sscanf(constraint, "range: %" SCNd64 "..%" SCNd64, &f->range_min, &f->range_max);
         f->has_range = 1;
     }
 
     constraint = strstr(line, "default:");
     if (constraint) {
-        sscanf(constraint, "default: %ld", &f->default_val);
+        sscanf(constraint, "default: %" SCNd64, &f->default_val);
         f->has_default = 1;
     }
 
@@ -391,7 +393,7 @@ static void gen_c_impl(FILE *out, const char *header_name) {
         for (int j = 0; j < t->field_count; j++) {
             field_t *f = &t->fields[j];
             if (f->has_default && f->base != TYPE_STRING) {
-                fprintf(out, "    obj->%s = %ld;\n", f->name, f->default_val);
+                fprintf(out, "    obj->%s = %" PRId64 ";\n", f->name, f->default_val);
             }
         }
         fprintf(out, "}\n\n");
@@ -401,7 +403,7 @@ static void gen_c_impl(FILE *out, const char *header_name) {
         for (int j = 0; j < t->field_count; j++) {
             field_t *f = &t->fields[j];
             if (f->has_range) {
-                fprintf(out, "    if (obj->%s < %ld || obj->%s > %ld) return false;\n",
+                fprintf(out, "    if (obj->%s < %" PRId64 " || obj->%s > %" PRId64 ") return false;\n",
                         f->name, f->range_min, f->name, f->range_max);
             }
             if (f->not_empty && f->base == TYPE_STRING) {
@@ -712,6 +714,7 @@ static void print_usage(void) {
 }
 
 int main(int argc, char *argv[]) {
+    tool_harden();
     output_mode_t mode = 0;
     const char *input = NULL;
     const char *outdir = ".";

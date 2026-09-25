@@ -16,6 +16,7 @@
  */
 
 #include <stdio.h>
+#include "../cosmo_harden.h"
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
@@ -416,6 +417,7 @@ static void print_usage(void) {
 }
 
 int main(int argc, char *argv[]) {
+    tool_harden();
     if (argc < 2) {
         print_usage();
         return 1;

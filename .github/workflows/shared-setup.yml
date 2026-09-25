@@ -32,6 +32,9 @@ on:
         description: 'Path to cosmocc'
         value: ${{ jobs.setup.outputs.cosmocc-path }}
 
+permissions:
+  contents: read
+
 jobs:
   setup:
     runs-on: ubuntu-latest
@@ -42,14 +45,12 @@ jobs:
         with:
           submodules: recursive
 
-      - name: Install cosmocc
+      - name: Install pinned cosmocc (cosmocc.mk, sha256-verified)
+        uses: ./.github/actions/setup-cosmocc
+
+      - name: Report cosmocc path
         id: cosmocc
-        run: |
-          mkdir -p ~/.cosmocc
-          curl -sL https://cosmo.zip/pub/cosmocc/cosmocc.zip -o /tmp/cosmocc.zip
-          unzip -q /tmp/cosmocc.zip -d ~/.cosmocc
-          echo "$HOME/.cosmocc/bin" >> $GITHUB_PATH
-          echo "path=$HOME/.cosmocc/bin" >> $GITHUB_OUTPUT
+        run: echo "path=$(dirname "$(command -v cosmocc)")" >> "$GITHUB_OUTPUT"
 
       - name: Build Ring 0 tools
         run: |

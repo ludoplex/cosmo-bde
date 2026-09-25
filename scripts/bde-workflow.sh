@@ -269,12 +269,12 @@ cmd_build() {
             file build/app
         else
             echo "${RED}Error: cosmocc not found${NC}"
-            echo "Install from: https://cosmo.zip/pub/cosmocc/"
+            echo "Run: make toolchain   (pinned cosmocc, sha256-verified; see cosmocc.mk)"
             exit 1
         fi
     else
         echo "${CYAN}Building native executable...${NC}"
-        make clean all
+        make CC=cc clean all
         echo ""
         echo "Native binary: build/app"
         file build/app
@@ -348,7 +348,7 @@ cmd_help() {
     echo "  3. Define states in .sm (how it transitions)"
     echo "  4. Regenerate: make regen"
     echo "  5. Verify: make verify"
-    echo "  6. Build: make (or CC=cosmocc make for APE)"
+    echo "  6. Build: make (APE via cosmocc; make CC=cc for native)"
     echo "  7. Test: make test"
     echo ""
 }
