@@ -212,7 +212,6 @@ jobs:
 
       - name: Check LLM symlinks
         run: |
-          test -L AI.md || true
           test -L LLM.md || true
           test -L CONTEXT.md || true
 

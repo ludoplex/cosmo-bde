@@ -1,6 +1,6 @@
 # cosmo-bde Architecture
 
-> **LLM Reference Document** - Comprehensive system architecture for AI assistants.
+> **LLM Reference Document** - Comprehensive system architecture for LLM-based coding assistants.
 >
 > See also: `RING_CLASSIFICATION.md`, `INTEROP_MATRIX.md`, `LITERATE.md`
 
