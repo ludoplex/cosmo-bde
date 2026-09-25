@@ -15,20 +15,20 @@ Named declarations indexed: 16
 
 ### `clipsgen.c`
 Path: `tools/clipsgen/clipsgen.c`
-- L25: `CLIPSGEN_VERSION` (c_define)
-- L26: `MAX_PATH` (c_define)
-- L27: `MAX_NAME` (c_define)
-- L28: `MAX_LINE` (c_define)
-- L29: `MAX_CONDS` (c_define)
-- L30: `MAX_ACTIONS` (c_define)
-- L31: `MAX_RULES` (c_define)
-- L48: `trim` (c_function_definition)
-- L56: `parse_rules` (c_function_definition)
-- L106: `generate_rules_h` (c_function_definition)
-- L158: `generate_rules_c` (c_function_definition)
-- L201: `print_usage` (c_function_definition)
-- L206: `main` (c_function_definition)
-- L225: `stat` (c_type)
+- L26: `CLIPSGEN_VERSION` (c_define)
+- L27: `MAX_PATH` (c_define)
+- L28: `MAX_NAME` (c_define)
+- L29: `MAX_LINE` (c_define)
+- L30: `MAX_CONDS` (c_define)
+- L31: `MAX_ACTIONS` (c_define)
+- L32: `MAX_RULES` (c_define)
+- L49: `trim` (c_function_definition)
+- L57: `parse_rules` (c_function_definition)
+- L107: `generate_rules_h` (c_function_definition)
+- L159: `generate_rules_c` (c_function_definition)
+- L202: `print_usage` (c_function_definition)
+- L207: `main` (c_function_definition)
+- L227: `stat` (c_type)
 
 ### `clipsgen_self.h`
 Path: `tools/clipsgen/clipsgen_self.h`

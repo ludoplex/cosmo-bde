@@ -15,21 +15,21 @@ Named declarations indexed: 19
 
 ### `msmgen.c`
 Path: `tools/msmgen/msmgen.c`
-- L32: `MSMGEN_VERSION` (c_define)
-- L33: `MAX_PATH` (c_define)
-- L34: `MAX_NAME` (c_define)
-- L35: `MAX_LINE` (c_define)
-- L36: `MAX_MODES` (c_define)
-- L37: `MAX_TRANS` (c_define)
-- L61: `trim` (c_function_definition)
-- L69: `to_upper` (c_function_definition)
-- L73: `ensure_output_dir` (c_function_definition)
-- L74: `stat` (c_type)
-- L83: `parse_msm` (c_function_definition)
-- L177: `generate_msm_h` (c_function_definition)
-- L222: `generate_msm_c` (c_function_definition)
-- L295: `print_usage` (c_function_definition)
-- L300: `main` (c_function_definition)
+- L33: `MSMGEN_VERSION` (c_define)
+- L34: `MAX_PATH` (c_define)
+- L35: `MAX_NAME` (c_define)
+- L36: `MAX_LINE` (c_define)
+- L37: `MAX_MODES` (c_define)
+- L38: `MAX_TRANS` (c_define)
+- L62: `trim` (c_function_definition)
+- L70: `to_upper` (c_function_definition)
+- L74: `ensure_output_dir` (c_function_definition)
+- L75: `stat` (c_type)
+- L80: `parse_msm` (c_function_definition)
+- L174: `generate_msm_h` (c_function_definition)
+- L219: `generate_msm_c` (c_function_definition)
+- L292: `print_usage` (c_function_definition)
+- L297: `main` (c_function_definition)
 
 ### `msmgen_self.h`
 Path: `tools/msmgen/msmgen_self.h`

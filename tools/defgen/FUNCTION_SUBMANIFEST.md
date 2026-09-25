@@ -15,19 +15,19 @@ Named declarations indexed: 18
 
 ### `defgen.c`
 Path: `tools/defgen/defgen.c`
-- L36: `DEFGEN_VERSION` (c_define)
-- L37: `MAX_PATH` (c_define)
-- L38: `MAX_NAME` (c_define)
-- L43: `emit_token_enum` (c_function_definition)
-- L56: `emit_token_names` (c_function_definition)
-- L68: `emit_keyword_table` (c_function_definition)
-- L81: `emit_table_structs` (c_function_definition)
-- L106: `emit_sql_create` (c_function_definition)
-- L121: `emit_sm_states` (c_function_definition)
-- L136: `print_usage` (c_function_definition)
-- L150: `ensure_output_dir` (c_function_definition)
-- L157: `main` (c_function_definition)
-- L272: `tm` (c_type)
+- L37: `DEFGEN_VERSION` (c_define)
+- L38: `MAX_PATH` (c_define)
+- L39: `MAX_NAME` (c_define)
+- L44: `emit_token_enum` (c_function_definition)
+- L57: `emit_token_names` (c_function_definition)
+- L69: `emit_keyword_table` (c_function_definition)
+- L82: `emit_table_structs` (c_function_definition)
+- L107: `emit_sql_create` (c_function_definition)
+- L122: `emit_sm_states` (c_function_definition)
+- L137: `print_usage` (c_function_definition)
+- L151: `ensure_output_dir` (c_function_definition)
+- L158: `main` (c_function_definition)
+- L274: `tm` (c_type)
 
 ### `defgen_self.h`
 Path: `tools/defgen/defgen_self.h`

@@ -15,19 +15,19 @@ Named declarations indexed: 16
 
 ### `siggen.c`
 Path: `tools/siggen/siggen.c`
-- L26: `SIGGEN_VERSION` (c_define)
-- L27: `MAX_PATH` (c_define)
-- L28: `MAX_NAME` (c_define)
-- L29: `MAX_LINE` (c_define)
-- L30: `MAX_PARAMS` (c_define)
-- L31: `MAX_FUNCS` (c_define)
-- L52: `trim` (c_function_definition)
-- L60: `sig_to_c` (c_function_definition)
-- L73: `parse_sig` (c_function_definition)
-- L149: `generate_sig_h` (c_function_definition)
-- L184: `print_usage` (c_function_definition)
-- L189: `main` (c_function_definition)
-- L208: `stat` (c_type)
+- L27: `SIGGEN_VERSION` (c_define)
+- L28: `MAX_PATH` (c_define)
+- L29: `MAX_NAME` (c_define)
+- L30: `MAX_LINE` (c_define)
+- L31: `MAX_PARAMS` (c_define)
+- L32: `MAX_FUNCS` (c_define)
+- L53: `trim` (c_function_definition)
+- L61: `sig_to_c` (c_function_definition)
+- L74: `parse_sig` (c_function_definition)
+- L150: `generate_sig_h` (c_function_definition)
+- L185: `print_usage` (c_function_definition)
+- L190: `main` (c_function_definition)
+- L210: `stat` (c_type)
 
 ### `siggen_self.h`
 Path: `tools/siggen/siggen_self.h`

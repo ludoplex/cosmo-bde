@@ -15,20 +15,20 @@ Named declarations indexed: 19
 
 ### `implgen.c`
 Path: `tools/implgen/implgen.c`
-- L39: `IMPLGEN_VERSION` (c_define)
-- L40: `MAX_PATH` (c_define)
-- L41: `MAX_NAME` (c_define)
-- L42: `MAX_LINE` (c_define)
-- L43: `MAX_PLATFORMS` (c_define)
-- L44: `MAX_TARGETS` (c_define)
-- L74: `trim` (c_function_definition)
-- L82: `to_upper` (c_function_definition)
-- L86: `ensure_output_dir` (c_function_definition)
-- L87: `stat` (c_type)
-- L98: `parse_impl` (c_function_definition)
-- L195: `generate_impl_h` (c_function_definition)
-- L321: `print_usage` (c_function_definition)
-- L333: `main` (c_function_definition)
+- L40: `IMPLGEN_VERSION` (c_define)
+- L41: `MAX_PATH` (c_define)
+- L42: `MAX_NAME` (c_define)
+- L43: `MAX_LINE` (c_define)
+- L44: `MAX_PLATFORMS` (c_define)
+- L45: `MAX_TARGETS` (c_define)
+- L75: `trim` (c_function_definition)
+- L83: `to_upper` (c_function_definition)
+- L87: `ensure_output_dir` (c_function_definition)
+- L88: `stat` (c_type)
+- L95: `parse_impl` (c_function_definition)
+- L192: `generate_impl_h` (c_function_definition)
+- L318: `print_usage` (c_function_definition)
+- L330: `main` (c_function_definition)
 
 ### `implgen_self.h`
 Path: `tools/implgen/implgen_self.h`
