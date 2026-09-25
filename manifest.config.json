@@ -1,0 +1,20 @@
+{
+  "generator_label": "python3 .github/ci-kit/manifest-gen.py . (manifest-kit 1.0.0)",
+  "description": "Deterministic index of named declarations in cosmo-bde (generators, application, generated code, scripts) with per-directory submanifests. Search here before adding a function.",
+  "languages": ["c", "shell", "python", "sql"],
+  "ignored_dirs": [".git", ".github", "__pycache__", "build", "o", "vendors", "node_modules", "dist"],
+  "c_scanner": "full",
+  "sql_scanner": "full",
+  "python_scanner": "ast",
+  "named_wording": true,
+  "encoding_errors": "ignore",
+  "coverage_rules": [
+    "Includes C/C++ functions, prototypes, types and #define macros; shell functions; Python functions/classes; SQL DDL.",
+    "Excludes third-party trees under `vendors/` (submodules and single-file libraries), build output (`build/`, `o/`) and `.github/`.",
+    "Regenerate with `python3 .github/ci-kit/manifest-gen.py .`; CI fails if the committed manifests drift (`.github/ci-kit/drift-gate.sh`)."
+  ],
+  "directory_notes": [
+    "Search this submanifest before adding new functions in this directory.",
+    "Prefer Cosmopolitan libc facilities (cosmo.h: IsWindows/IsXnu/IsLinux, ShowCrashReports, pledge/unveil) over new platform code."
+  ]
+}
