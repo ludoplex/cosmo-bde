@@ -40,7 +40,7 @@ A spec-driven code generation framework where:
 ```
 cosmo-bde/
 ├── vendors/
-│   ├── libs/           # Single-file libraries (sqlite3, yyjson)
+│   ├── libs/           # Single-file libraries (yyjson); SQLite = cosmopolitan third_party/sqlite3
 │   └── submodules/     # Git submodules (e9studio, cosmo-sokol, etc.)
 ├── tools/              # Ring 0 generators (pure C)
 │   ├── {name}/

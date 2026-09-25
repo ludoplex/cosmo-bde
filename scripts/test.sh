@@ -73,7 +73,10 @@ echo
 
 echo "── Generated Code Validation ────────────────────────────────────────────────"
 
-# Use vendored dependencies (yyjson, sqlite3) - always available
+# This check compiles with the host `cc`. yyjson is vendored in vendors/libs;
+# SQLite is not vendored, so <sqlite3.h> comes from the host's SQLite headers
+# (Cosmopolitan's third_party/sqlite3 header needs cosmocc; the APE build is
+# exercised by `make check`, which links it).
 VENDOR_DIR="$ROOT_DIR/vendors/libs"
 CFLAGS="-I$VENDOR_DIR"
 

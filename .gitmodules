@@ -52,3 +52,7 @@
 [submodule "vendors/submodules/OpenModelica"]
 	path = vendors/submodules/OpenModelica
 	url = https://github.com/OpenModelica/OpenModelica
+[submodule "vendors/submodules/cosmopolitan"]
+	path = vendors/submodules/cosmopolitan
+	url = https://github.com/jart/cosmopolitan.git
+	shallow = true

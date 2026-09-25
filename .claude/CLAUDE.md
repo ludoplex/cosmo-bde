@@ -4,7 +4,7 @@
 
 ```
 bde-with-models/
-├── vendors/libs/           # Vendored single-file libs (yyjson, sqlite3)
+├── vendors/libs/           # Vendored single-file libs (yyjson); SQLite = cosmopolitan third_party/sqlite3
 ├── vendors/submodules/     # Git submodules (e9studio, cosmo-sokol, etc.)
 ├── tools/                  # Ring 0 generators (Pure C)
 ├── specs/{layer}/          # Human-authored specifications
