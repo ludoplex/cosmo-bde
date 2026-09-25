@@ -2,13 +2,17 @@
 # setup-cosmocc - Composite action for cosmocc installation
 # ══════════════════════════════════════════════════════════════════════════════
 #
+# Installs exactly the toolchain pinned in cosmocc.mk (version + sha256) with
+# `make toolchain`, which runs jart's download-cosmocc.sh and refuses a zip
+# whose sha256 does not match.
+#
 # Usage:
 #   - uses: ./.github/actions/setup-cosmocc
 #
 # ══════════════════════════════════════════════════════════════════════════════
 
 name: 'Setup cosmocc'
-description: 'Install Cosmopolitan C compiler for APE builds'
+description: 'Install the pinned Cosmopolitan C toolchain (cosmocc.mk) for APE builds'
 
 runs:
   using: 'composite'
@@ -17,17 +21,16 @@ runs:
       id: cache-cosmocc
       uses: actions/cache@v4
       with:
-        path: ~/.cosmocc
-        key: cosmocc-${{ runner.os }}
+        path: .cosmocc
+        key: cosmocc-${{ runner.os }}-${{ hashFiles('cosmocc.mk') }}
 
-    - name: Install cosmocc
+    - name: Install pinned cosmocc (sha256-verified)
       if: steps.cache-cosmocc.outputs.cache-hit != 'true'
       shell: bash
-      run: |
-        mkdir -p ~/.cosmocc
-        curl -sL https://cosmo.zip/pub/cosmocc/cosmocc.zip -o /tmp/cosmocc.zip
-        unzip -q /tmp/cosmocc.zip -d ~/.cosmocc
+      run: make toolchain
 
     - name: Add cosmocc to PATH
       shell: bash
-      run: echo "$HOME/.cosmocc/bin" >> $GITHUB_PATH
+      run: |
+        version=$(sed -n 's/^COSMOCC_VERSION := //p' cosmocc.mk)
+        echo "$GITHUB_WORKSPACE/.cosmocc/$version/bin" >> "$GITHUB_PATH"

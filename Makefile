@@ -19,10 +19,35 @@
 # ══════════════════════════════════════════════════════════════════════════════
 
 # ── Toolchain ─────────────────────────────────────────────────────────────────
-# For APE builds: make CC=cosmocc (or install cosmocc in PATH)
-# For native builds: make CC=cc
-CC ?= cc
-CFLAGS := -O2 -Wall -Werror -std=c11 -Wno-stringop-truncation
+# Default: cosmocc, which emits Actually Portable Executables (one binary for
+# Linux, macOS, Windows, FreeBSD, OpenBSD and NetBSD on x86-64 and arm64).
+# The toolchain is pinned by version + sha256 in cosmocc.mk; `make toolchain`
+# fetches exactly that release with jart's own download-cosmocc.sh.
+# Native (host-only) build: make CC=cc
+include cosmocc.mk
+COSMOCC_DIR ?= .cosmocc/$(COSMOCC_VERSION)
+
+# make predefines CC=cc (origin "default"), so `CC ?= ...` never takes effect;
+# only replace the built-in default, never a CC given on the command line/env.
+ifeq ($(origin CC),default)
+CC := $(or $(shell command -v cosmocc 2>/dev/null),$(wildcard $(COSMOCC_DIR)/bin/cosmocc),$(wildcard $(HOME)/.cosmocc/bin/cosmocc),cosmocc)
+endif
+ifeq ($(notdir $(CC)),cosmocc)
+AR := $(patsubst %cosmocc,%cosmoar,$(CC))
+endif
+
+CFLAGS := -O2 -Wall -Werror -std=c11
+# -Wno-stringop-truncation is a GCC-only knob (cosmocc is GCC); clang rejects
+# unknown -W options under -Werror.
+ifeq ($(findstring clang,$(shell $(CC) --version 2>/dev/null)),)
+CFLAGS += -Wno-stringop-truncation
+endif
+# cosmocc README: programs using Cosmo-specific APIs (ShowCrashReports(),
+# pledge(), IsXnu(), ...) should pass -mcosmo, which defines _COSMO_SOURCE.
+ifeq ($(notdir $(CC)),cosmocc)
+COSMO_MODE_FLAGS := -mcosmo
+CFLAGS += $(COSMO_MODE_FLAGS)
+endif
 
 # ── Directories ───────────────────────────────────────────────────────────────
 BUILD_DIR := build
@@ -73,7 +98,7 @@ GEN_SRCS := $(shell find $(GEN_DIR) -name '*.c' 2>/dev/null)
 SRC_SRCS := $(shell find $(SRC_DIR) -name '*.c' 2>/dev/null)
 VENDOR_SRCS := $(shell find $(VENDOR_DIR) -name '*.c' 2>/dev/null)
 
-.PHONY: all clean regen verify test tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev
+.PHONY: all clean regen verify test check sql-check sqlite3 cosmo-src toolchain tools help app run formats ape ring1 headers lint sanitize tsan e9studio livereload feedback dev
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Primary Targets
@@ -89,7 +114,10 @@ help:
 	@echo "│  cosmo-bde — BDE with Models                                  │"
 	@echo "│  Behavior Driven Engineering with Models                            │"
 	@echo "├─────────────────────────────────────────────────────────────────────┤"
-	@echo "│  make              Build Ring 0 tools + application                 │"
+	@echo "│  make              Build Ring 0 tools + application (APE, cosmocc)  │"
+	@echo "│  make CC=cc        Same, but native host-only binaries              │"
+	@echo "│  make toolchain    Fetch pinned cosmocc (sha256-verified)           │"
+	@echo "│  make check        Unit tests + SQLite round-trip (cosmo sqlite3)   │"
 	@echo "│  make regen        Regenerate all (auto-detect tools)               │"
 	@echo "│  make verify       Regen + drift check                              │"
 	@echo "│  make e9studio     Build live reload tool                           │"
@@ -147,7 +175,17 @@ tools: $(BUILD_DIR) $(RING0_TOOLS)
 	@echo "Ring 0 tools ready"
 
 $(BUILD_DIR):
+	@command -v $(CC) >/dev/null 2>&1 || { \
+		echo "error: compiler '$(CC)' not found."; \
+		echo "  APE build (default): make toolchain   (cosmocc $(COSMOCC_VERSION), sha256-pinned)"; \
+		echo "  native build:        make CC=cc"; \
+		exit 1; }
 	mkdir -p $@
+
+# Fetch the pinned cosmocc release; verifies COSMOCC_SHA256 before unpacking.
+toolchain:
+	@sh scripts/download-cosmocc.sh $(COSMOCC_DIR) $(COSMOCC_VERSION) $(COSMOCC_SHA256)
+	@echo "cosmocc $(COSMOCC_VERSION) ready: $(CURDIR)/$(COSMOCC_DIR)/bin"
 
 $(BUILD_DIR)/schemagen: $(TOOLS_DIR)/schemagen.c | $(BUILD_DIR)
 	$(CC) $(CFLAGS) -o $@ $<
@@ -205,13 +243,13 @@ $(BUILD_DIR)/clipsgen: $(TOOLS_DIR)/clipsgen/clipsgen.c | $(BUILD_DIR)
 # Ring 1 vendored tools (built from tools/ring1/)
 RING1_TOOLS := $(BUILD_DIR)/makeheaders
 
-# Ring 1 compiler: prefer cosmocc for portability, fallback to CC
-RING1_CC := $(shell command -v cosmocc >/dev/null 2>&1 && echo "cosmocc" || echo "$(CC)")
+# Ring 1 compiler: same toolchain as Ring 0 (cosmocc unless CC= overrides it)
+RING1_CC := $(CC)
 RING1_CFLAGS := -O2 -Wall -std=c11 -Wno-unused-variable -Wno-unused-but-set-variable
 
 ring1: $(BUILD_DIR) $(RING1_TOOLS)
 	@echo "Ring 1 tools ready (compiler: $(RING1_CC))"
-	@if [ "$(RING1_CC)" = "cosmocc" ]; then \
+	@if [ "$(notdir $(RING1_CC))" = "cosmocc" ]; then \
 		echo "  APE binaries: portable across Linux/macOS/Windows/BSD"; \
 	else \
 		echo "  Native binaries: install cosmocc for portable APE builds"; \
@@ -297,27 +335,68 @@ dev:
 app: $(BUILD_DIR)/app
 	@echo "Application built"
 
-# Dependencies: main.c + all generated domain types
-$(BUILD_DIR)/app: $(SRC_DIR)/main.c $(GEN_DIR)/domain/example_types.c | $(BUILD_DIR)
-	$(CC) $(CFLAGS) -I$(GEN_DIR)/domain -o $@ $(SRC_DIR)/main.c $(GEN_DIR)/domain/example_types.c
+# Dependencies: main.c + platform layer + generated domain types
+APP_SRCS := $(SRC_DIR)/main.c $(SRC_DIR)/platform/platform.c $(GEN_DIR)/domain/example_types.c
+$(BUILD_DIR)/app: $(APP_SRCS) $(SRC_DIR)/platform/platform.h | $(BUILD_DIR)
+	$(CC) $(CFLAGS) -I$(GEN_DIR)/domain -I$(SRC_DIR)/platform -o $@ $(APP_SRCS)
 
 run: app
 	@$(BUILD_DIR)/app
 
-# APE build (Actually Portable Executable via cosmocc)
-ape:
-	@if [ -x "$$(command -v cosmocc 2>/dev/null || echo ~/.cosmocc/bin/cosmocc)" ]; then \
-		$(MAKE) clean; \
-		CC="$$(command -v cosmocc 2>/dev/null || echo ~/.cosmocc/bin/cosmocc)" $(MAKE) all ring1; \
-		echo ""; \
-		echo "APE binaries built (portable across Linux/macOS/Windows/BSD)"; \
-	else \
-		echo "cosmocc not found. Install:"; \
-		echo "  mkdir -p ~/.cosmocc"; \
-		echo "  curl -L https://cosmo.zip/pub/cosmocc/cosmocc.zip -o /tmp/cosmocc.zip"; \
-		echo "  unzip /tmp/cosmocc.zip -d ~/.cosmocc"; \
-		exit 1; \
-	fi
+# APE build (Actually Portable Executable via cosmocc) — this is the default
+# toolchain; `ape` is kept as an explicit alias that also builds Ring 1.
+ape: all ring1
+	@echo ""
+	@echo "APE binaries built with $(CC) (portable across Linux/macOS/Windows/BSD)"
+
+# ══════════════════════════════════════════════════════════════════════════════
+# SQLite — reuse Cosmopolitan's third_party/sqlite3 (no vendored amalgamation)
+# ══════════════════════════════════════════════════════════════════════════════
+#
+# Sources come from jart/cosmopolitan pinned (git submodule) to the commit that
+# cosmocc $(COSMOCC_VERSION) was built from, so headers match libcosmo.a.
+# `make cosmo-src` does a sparse, shallow checkout of just what is needed.
+# -idirafter keeps cosmocc's own libc headers first; the monorepo is only
+# consulted for headers cosmocc does not ship (third_party/sqlite3/*).
+# The compile flags mirror third_party/sqlite3/BUILD.mk in that commit, minus
+# -DSQLITE_OMIT_AUTOINIT: jart's sqlite3 shell calls sqlite3_initialize()
+# itself, but code using the generated *_sql.c bindings relies on
+# sqlite3_open() auto-initializing, as stock SQLite does.
+
+COSMO_SRC ?= vendors/submodules/cosmopolitan
+SQLITE3_DIR := $(COSMO_SRC)/third_party/sqlite3
+SQLITE3_SRCS = $(filter-out %shell.c,$(wildcard $(SQLITE3_DIR)/*.c))
+SQLITE3_OBJS = $(patsubst $(COSMO_SRC)/%.c,$(BUILD_DIR)/cosmo/%.o,$(SQLITE3_SRCS))
+SQLITE3_A := $(BUILD_DIR)/libsqlite3.a
+SQLITE3_FLAGS := -DNDEBUG -DSQLITE_CORE -DSQLITE_OS_UNIX -DBUILD_sqlite \
+	-DHAVE_USLEEP -DHAVE_READLINK -DHAVE_FCHOWN -DHAVE_MREMAP -DHAVE_LSTAT \
+	-DHAVE_GMTIME_R -DHAVE_FDATASYNC -DHAVE_STRCHRNUL -DHAVE_LOCALTIME_R \
+	-DHAVE_MALLOC_USABLE_SIZE -DSQLITE_THREADSAFE=1 -DSQLITE_MAX_EXPR_DEPTH=0 \
+	-DSQLITE_DEFAULT_MEMSTATUS=0 -DSQLITE_DEFAULT_WAL_SYNCHRONOUS=1 \
+	-DSQLITE_LIKE_DOESNT_MATCH_BLOBS -DSQLITE_OMIT_UTF16 \
+	-DSQLITE_OMIT_TCL_VARIABLE -DSQLITE_OMIT_LOAD_EXTENSION \
+	-DSQLITE_OMIT_GET_TABLE \
+	-DSQLITE_OMIT_COMPILEOPTION_DIAGS -DSQLITE_HAVE_C99_MATH_FUNCS \
+	-DSQLITE_ENABLE_MATH_FUNCTIONS -DSQLITE_ENABLE_JSON1 \
+	-DSQLITE_ENABLE_DESERIALIZE -DSQLITE_ENABLE_PREUPDATE_HOOK \
+	-DSQLITE_ENABLE_SESSION -DSQLITE_ENABLE_BATCH_ATOMIC_WRITE
+
+cosmo-src:
+	@sh scripts/cosmo-src.sh $(COSMO_SRC)
+
+$(SQLITE3_DIR)/sqlite3.h:
+	@echo "error: $(SQLITE3_DIR) missing. Run: make cosmo-src" >&2; exit 1
+
+$(BUILD_DIR)/cosmo/%.o: $(COSMO_SRC)/%.c | $(BUILD_DIR)
+	@mkdir -p $(@D)
+	$(CC) -O2 -w $(COSMO_MODE_FLAGS) -idirafter$(COSMO_SRC) $(SQLITE3_FLAGS) -c -o $@ $<
+
+$(SQLITE3_A): $(SQLITE3_DIR)/sqlite3.h $(SQLITE3_OBJS)
+	@rm -f $@
+	$(AR) rcs $@ $(SQLITE3_OBJS)
+
+sqlite3: $(SQLITE3_A)
+	@echo "libsqlite3.a built from $(SQLITE3_DIR)"
 
 # ══════════════════════════════════════════════════════════════════════════════
 # Regeneration (format-driven, auto-detects tools)
@@ -348,6 +427,37 @@ $(GEN_DIR)/parsing/%.c $(GEN_DIR)/parsing/%.h: $(SPECS_DIR)/parsing/%.y $(BUILD_
 # ══════════════════════════════════════════════════════════════════════════════
 # Testing
 # ══════════════════════════════════════════════════════════════════════════════
+
+# Unit tests use test/testlib.h, which mirrors cosmopolitan's libc/testlib
+# interface (TEST(), EXPECT_EQ(want, got)); each test is its own binary (APE
+# under cosmocc) and exits non-zero on any failure.
+TEST_DIR := test
+TEST_CFLAGS = $(CFLAGS) -I$(TEST_DIR) -I$(SRC_DIR)/platform -I$(GEN_DIR)/domain
+
+$(BUILD_DIR)/platform_test: $(TEST_DIR)/platform_test.c $(TEST_DIR)/testlib.h $(SRC_DIR)/platform/platform.c $(SRC_DIR)/platform/platform.h | $(BUILD_DIR)
+	$(CC) $(TEST_CFLAGS) -o $@ $(TEST_DIR)/platform_test.c $(SRC_DIR)/platform/platform.c
+
+# SQL round-trip: APE builds link Cosmopolitan's sqlite3 (make sqlite3);
+# native builds (CC=cc) link the host's libsqlite3.
+ifeq ($(notdir $(CC)),cosmocc)
+SQL_TEST_DEPS = $(SQLITE3_A)
+SQL_TEST_INC = -I$(SQLITE3_DIR)
+SQL_TEST_LIBS = $(SQLITE3_A)
+else
+SQL_TEST_DEPS =
+SQL_TEST_INC =
+SQL_TEST_LIBS = -lsqlite3
+endif
+SQL_TEST_SRCS := $(TEST_DIR)/sql_test.c $(GEN_DIR)/domain/example_sql.c $(GEN_DIR)/domain/example_types.c
+
+$(BUILD_DIR)/sql_test: $(SQL_TEST_SRCS) $(TEST_DIR)/testlib.h $(SQL_TEST_DEPS) | $(BUILD_DIR)
+	$(CC) $(TEST_CFLAGS) $(SQL_TEST_INC) -o $@ $(SQL_TEST_SRCS) $(SQL_TEST_LIBS)
+
+sql-check: $(BUILD_DIR)/sql_test
+	$(BUILD_DIR)/sql_test
+
+check: $(BUILD_DIR)/platform_test sql-check
+	$(BUILD_DIR)/platform_test
 
 test: tools
 	@echo "Running BDD tests..."
